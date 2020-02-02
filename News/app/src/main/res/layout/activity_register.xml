@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayoutRegister"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".activity.RegisterActivity">
+
+    <LinearLayout
+        android:id="@+id/linearLayoutLogo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="40dp">
+
+        <ImageView
+            android:id="@+id/imageViewLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:maxHeight="100dp"
+            app:srcCompat="@drawable/logo_news_fill_2" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutRegisterUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp">
+
+        <ImageView
+            android:id="@+id/imageViewRegisterUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:adjustViewBounds="true"
+            android:maxWidth="35dp"
+            app:srcCompat="@drawable/user_icon" />
+
+        <EditText
+            android:id="@+id/editTextRegisterUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/imageViewRegisterUsername"
+            android:ems="10"
+            android:hint="请输入用户名"
+            android:inputType="textPersonName" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutRegisterPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/imageViewRegisterPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:adjustViewBounds="true"
+            android:maxWidth="35dp"
+            app:srcCompat="@drawable/password_icon" />
+
+        <EditText
+            android:id="@+id/editTextRegisterPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/imageViewRegisterPassword"
+            android:ems="10"
+            android:hint="请输入密码"
+            android:inputType="textPassword" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutRegisterRePassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/imageViewRegisterRePassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:adjustViewBounds="true"
+            android:maxWidth="35dp"
+            app:srcCompat="@drawable/password_icon" />
+
+        <EditText
+            android:id="@+id/editTextRegisterRePassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/imageViewRegisterRePassword"
+            android:ems="10"
+            android:hint="请再输入一次密码"
+            android:inputType="textPassword" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/buttonRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="5dp"
+        android:background="@color/default_dark_blue"
+        android:text="@string/register" />
+</LinearLayout>

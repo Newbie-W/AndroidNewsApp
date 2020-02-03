@@ -4,4 +4,28 @@
     <string name="password">密码</string>
     <string name="login">登录</string>
     <string name="register">注册</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">用户名</string>
+    <string name="nav_header_subtitle">这个人很懒，并没有留下什么。</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">设置</string>
+
+    <string name="menu_subscribe">我的订阅</string>
+    <string name="menu_favorite">我的收藏</string>
+    <string name="menu_history">浏览历史</string>
+    <string name="menu_information">我的消息</string>
+    <string name="menu_setting">设置</string>
+    <string name="menu_help">帮助与反馈</string>
+
+    <string name="hello_subscribe_fragment">Hello subscribe fragment</string>
+    <string name="hello_favorite_fragment">Hello favorite fragment</string>
+    <string name="hello_history_fragment">Hello history fragment</string>
+    <string name="hello_information_fragment">Hello information fragment</string>
+    <string name="hello_setting_fragment">Hello setting fragment</string>
+    <string name="hello_help_fragment">Hello help fragment</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

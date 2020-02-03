@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_subscribe"
+            android:icon="@drawable/ic_menu_subscribe"
+            android:title="@string/menu_subscribe" />
+        <item
+            android:id="@+id/nav_favorite"
+            android:icon="@drawable/ic_menu_favorite"
+            android:title="@string/menu_favorite" />
+        <item
+            android:id="@+id/nav_history"
+            android:icon="@drawable/ic_menu_history"
+            android:title="@string/menu_history" />
+        <item
+            android:id="@+id/nav_information"
+            android:icon="@drawable/ic_menu_information"
+            android:title="@string/menu_information" />
+    </group>
+
+    <item android:title="更多">
+        <menu>
+            <item
+                android:id="@+id/nav_setting"
+                android:icon="@drawable/ic_menu_setting"
+                android:title="@string/menu_setting" />
+            <item
+                android:id="@+id/nav_help"
+                android:icon="@drawable/ic_menu_help"
+                android:title="@string/menu_help" />
+        </menu>
+    </item>
+
+</menu>

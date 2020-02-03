@@ -7,4 +7,5 @@
     <color name="default_blue">#a6e3e9</color>
     <color name="default_light_blue">#cbf1f5</color>
     <color name="default_lighter_blue">#e3fdfd</color>
+    <color name="default_appBar_deeper_blue">#7190CE</color>
 </resources>

@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.knewbie.news.MainActivity;
 import com.knewbie.news.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -51,6 +52,8 @@ public class LoginActivity extends AppCompatActivity {
         String pwd = editTextPwd.getText().toString();
         if (uname.equals("0")&&pwd.equals("0") || uname.equals("admin")&&pwd.equals("admin")) {
             Toast.makeText(this, "登录成功", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         } else {
             Toast.makeText(this, "登录失败，测试用户0", Toast.LENGTH_LONG).show();
         }

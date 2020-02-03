@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linearLayoutLogin"
+    android:id="@+id/layoutLogin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/linearLayoutLogo"
+        android:id="@+id/layoutLogo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
@@ -26,7 +26,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayoutForm"
+        android:id="@+id/layoutForm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
@@ -74,7 +74,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayoutLink"
+        android:id="@+id/layoutLink"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="20dp"

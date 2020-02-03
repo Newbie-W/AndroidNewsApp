@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linearLayoutRegister"
+    android:id="@+id/layoutRegister"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context=".activity.RegisterActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayoutLogo"
+        android:id="@+id/layoutLogo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
@@ -27,7 +27,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/relativeLayoutRegisterUsername"
+        android:id="@+id/layoutRegisterUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -40,7 +40,7 @@
             android:layout_marginRight="5dp"
             android:adjustViewBounds="true"
             android:maxWidth="35dp"
-            app:srcCompat="@drawable/user_icon" />
+            app:srcCompat="@drawable/ic_user" />
 
         <EditText
             android:id="@+id/editTextRegisterUsername"
@@ -53,7 +53,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/relativeLayoutRegisterPassword"
+        android:id="@+id/layoutRegisterPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -66,7 +66,7 @@
             android:layout_marginRight="5dp"
             android:adjustViewBounds="true"
             android:maxWidth="35dp"
-            app:srcCompat="@drawable/password_icon" />
+            app:srcCompat="@drawable/ic_password" />
 
         <EditText
             android:id="@+id/editTextRegisterPassword"
@@ -79,7 +79,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/relativeLayoutRegisterRePassword"
+        android:id="@+id/layoutRegisterRePassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -92,7 +92,7 @@
             android:layout_marginRight="5dp"
             android:adjustViewBounds="true"
             android:maxWidth="35dp"
-            app:srcCompat="@drawable/password_icon" />
+            app:srcCompat="@drawable/ic_password" />
 
         <EditText
             android:id="@+id/editTextRegisterRePassword"

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bottomNav_video"
+        android:icon="@drawable/ic_bottomnav_video_down"
+        android:title="@string/bottomNav_video">
+    </item>
+    <item
+        android:id="@+id/bottomNav_home"
+        android:checked="true"
+        android:icon="@drawable/ic_bottomnav_home_down"
+        android:title="@string/bottomNav_home"></item>
+    <item
+        android:id="@+id/bottomNav_my"
+        android:icon="@drawable/ic_bottomnav_my_down"
+        android:title="@string/bottomNav_my">
+    </item>
+</menu>

@@ -3,33 +3,44 @@ package com.knewbie.news;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.knewbie.news.adapter.ViewPagerAdapter;
 import com.knewbie.news.fragment.FavoriteFragment;
 import com.knewbie.news.fragment.HistoryFragment;
+import com.knewbie.news.fragment.HomeFragment;
 import com.knewbie.news.fragment.InformationFragment;
+import com.knewbie.news.fragment.MyFragment;
 import com.knewbie.news.fragment.SettingFragment;
 import com.knewbie.news.fragment.SubscribeFragment;
+import com.knewbie.news.fragment.VideoFragment;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.ViewPager;
 
 import android.view.Menu;
 
+import static android.os.Build.VERSION_CODES.M;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +63,46 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+
+        viewPager = findViewById(R.id.viewPager);
+        setupViewPager(viewPager);
+        final BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavView);
+        bottomNavigationView.getMenu().getItem(1).setChecked(true);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.bottomNav_video:
+                        viewPager.setCurrentItem(0);
+                        return true;
+                    case R.id.bottomNav_home:
+                        viewPager.setCurrentItem(1);
+                        return true;
+                    case R.id.bottomNav_my:
+                        viewPager.setCurrentItem(2);
+                        return true;
+                        default: break;
+                }
+                return false;
+            }
+        });
+
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {  //滑动页面后的效果
+                bottomNavigationView.getMenu().getItem(position).setChecked(true);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override
@@ -110,9 +161,8 @@ public class MainActivity extends AppCompatActivity
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.layoutContent, fragment).commit();
         } else if (id == R.id.nav_setting) {
-            SettingFragment fragment = new SettingFragment();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.layoutContent, fragment).commit();
+            Intent intent = new Intent("showSetting");
+            startActivity(intent);
         } else if (id == R.id.nav_help) {
             Intent intent = new Intent("showHelp");
             startActivity(intent);
@@ -121,5 +171,17 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        VideoFragment videoFragment = new VideoFragment();
+        HomeFragment homeFragment = new HomeFragment();
+        MyFragment myFragment = new MyFragment();
+        viewPagerAdapter.addFragment(videoFragment);
+        viewPagerAdapter.addFragment(homeFragment);
+        viewPagerAdapter.addFragment(myFragment);
+        viewPager.setAdapter(viewPagerAdapter);
+        viewPager.setCurrentItem(1);
     }
 }

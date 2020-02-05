@@ -11,6 +11,7 @@
         android:id="@+id/imageViewSplashPage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:scaleType="fitXY"
         android:src="@drawable/splash_page" />
 
     <TextView

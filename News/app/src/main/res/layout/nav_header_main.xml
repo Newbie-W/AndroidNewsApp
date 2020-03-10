@@ -12,17 +12,19 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/nav_header_desc"
-        android:maxHeight="80dp"
+    <!-- android:contentDescription="@string/nav_header_desc" -->
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageViewAppbarIcon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        app:srcCompat="@mipmap/ic_appbar_user" />
+        android:src="@drawable/ic_appbar_user"
+        app:civ_border_color="#ffffff"
+        app:civ_border_width="2dp" />
 
     <TextView
+        android:id="@+id/textViewAppbarUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
@@ -31,7 +33,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textViewAppbarSignature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/nav_header_subtitle" />

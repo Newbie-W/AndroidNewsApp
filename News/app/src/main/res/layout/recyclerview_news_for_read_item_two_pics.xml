@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardView_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="4dp"
+    android:descendantFocusability="blocksDescendants">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/layout_newsDisplayItem_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp">
+
+            <ImageView
+                android:id="@+id/imageViewNewsPic1_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/abc_btn_radio_material"
+                app:srcCompat="@drawable/logo_news_fill_2" />
+
+            <TextView
+                android:id="@+id/textViewTitle_recyclerview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/imageViewNewsPic1_recyclerview"
+                android:text="题标题标题标题标题标题标题标题题标题题标题标题标题题标题标题"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textViewAuthor_recyclerview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textViewTitle_recyclerview"
+                android:layout_alignParentRight="true"
+                android:text="News官方作者"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_operate_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_newsDisplayItem_recyclerview"
+            android:layout_marginBottom="10dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="5dp">
+
+            <ImageView
+                android:id="@+id/imageViewLike_recyclerview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:adjustViewBounds="true"
+                android:maxHeight="15dp"
+                app:srcCompat="@drawable/ic_home_like_down" />
+
+            <TextView
+                android:id="@+id/textViewLikeAmount_recyclerview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/imageViewLike_recyclerview"
+                android:layout_marginLeft="3dp"
+                android:layout_toRightOf="@id/imageViewLike_recyclerview"
+                android:text="0"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/imageViewRead_recyclerview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/imageViewLike_recyclerview"
+                android:layout_marginLeft="90dp"
+                android:adjustViewBounds="true"
+                android:maxHeight="15dp"
+                app:srcCompat="@drawable/ic_home_read" />
+
+            <TextView
+                android:id="@+id/textViewReadAmount_recyclerview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/imageViewRead_recyclerview"
+                android:layout_marginLeft="3dp"
+                android:layout_toRightOf="@id/imageViewRead_recyclerview"
+                android:text="0"
+                android:textSize="12sp" />
+
+            <ImageView
+                android:id="@+id/imageViewReview_recyclerview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/imageViewLike_recyclerview"
+                android:layout_marginLeft="160dp"
+                android:adjustViewBounds="true"
+                android:maxHeight="15dp"
+                app:srcCompat="@drawable/ic_home_review" />
+
+            <TextView
+                android:id="@+id/textViewReviewAmount_recyclerview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/imageViewReview_recyclerview"
+                android:layout_marginLeft="3dp"
+                android:layout_toRightOf="@id/imageViewReview_recyclerview"
+                android:text="0"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/textViewLastEditTime_recyclerview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/imageViewLike_recyclerview"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:text="2020-01-01"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>

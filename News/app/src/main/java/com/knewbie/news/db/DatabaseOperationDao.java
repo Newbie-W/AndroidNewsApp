@@ -1,0 +1,301 @@
+package com.knewbie.news.db;
+
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.knewbie.news.R;
+import com.knewbie.news.entity.NewsBean;
+import com.knewbie.news.entity.UserBean;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class DatabaseOperationDao {
+    private DatabaseHelper databaseHelper;
+    private SQLiteDatabase db;
+
+    public DatabaseOperationDao(Context context) {
+        databaseHelper = new DatabaseHelper(context);
+        db = databaseHelper.getWritableDatabase();
+    }
+
+    /*
+     * User
+     * */
+    public boolean findUsername(String username) {
+        Cursor cursor = db.query("user_table", null, "username = ?", new String[]{username}, null, null, null);
+        if (cursor.moveToNext()) {
+            return true;
+        } else return false;
+    }
+
+    public UserBean findUser(String username, String pwd) {
+        UserBean userBean;
+        Cursor cursor = db.query("user_table", null, "username = ? and password = ?", new String[]{username, pwd}, null, null, null);
+        if (cursor.moveToNext()) {
+            userBean = new UserBean();
+            userBean.setId(cursor.getInt(cursor.getColumnIndex("user_id")));
+            userBean.setUsername(cursor.getString(cursor.getColumnIndex("username")));
+            userBean.setPassword(cursor.getString(cursor.getColumnIndex("password")));
+            userBean.setEmailAd(cursor.getString(cursor.getColumnIndex("email_address")));
+            userBean.setSignature(cursor.getString(cursor.getColumnIndex("signature")));
+            //userBean.setAvatar(R.drawable.ic_appbar_user);
+            cursor.close();
+        } else return null; //此种情况，用户名或密码不存在
+
+        return userBean;
+    }
+    public List<UserBean> getUser() {
+        List<UserBean> result = new ArrayList<>();
+        //user_table(user_id, username, password, email_address, signature, is_auth, pic_id)
+        Cursor cursor = db.query("user_table", null, null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            UserBean item = new UserBean();
+            item.setId(cursor.getInt(cursor.getColumnIndex("user_id")));
+            item.setUsername(cursor.getString(cursor.getColumnIndex("username")));
+            item.setPassword(cursor.getString(cursor.getColumnIndex("password")));
+            item.setEmailAd(cursor.getString(cursor.getColumnIndex("eemail_address")));
+            item.setSignature(cursor.getString(cursor.getColumnIndex("signature")));
+            //item.setAvatar(R.drawable.ic_appbar_user);
+            result.add(item);
+        }
+        cursor.close();
+        return result;
+    }
+
+    public void addUser(UserBean item) {
+        db.beginTransaction();
+        try {
+            //user_table(user_id, username, password, email_address, signature, is_auth, pic_id)
+            db.execSQL("insert into user_table values(null, ?, ?, ?, ?, 0, ?)", new Object[]{item.getUsername(), item.getPassword(), item.getEmailAd(), item.getSignature(), R.drawable.ic_appbar_user});
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void deleteUser(long id) {
+        String sql = "delete from user_table where user_id = "+id;
+        db.beginTransaction();
+        try {
+            db.execSQL(sql);
+            db.setTransactionSuccessful();
+        }finally {
+            db.endTransaction();
+        }
+    }
+
+    /*
+    * News For Read
+    * */
+    public List<NewsBean.ResultBean.DataBean> getNewsDataBeanList() {
+        List<NewsBean.ResultBean.DataBean> result = new ArrayList<>();
+        // news_table (news_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url, cover_pic2_url, cover_pic3_url)
+        /* 以前设计
+        news_table (news_id, title, type, digest, read_amount, review_amount, like_amount, content, last_edit_time, release_user_id, cover_pic_id)
+        目前cover_pic不是id，是图片
+        */
+        Cursor cursor = db.query("news_table", null, null, null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            NewsBean.ResultBean.DataBean item = new NewsBean.ResultBean.DataBean();
+            item.setUniquekey(cursor.getString(cursor.getColumnIndex("news_id")));
+            item.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+            //item.setIntroduction(cursor.getString(cursor.getColumnIndex("digest")));
+            //item.setReadAmount(cursor.getInt(cursor.getColumnIndex("read_amount")));
+            //item.setReviewAmount(cursor.getInt(cursor.getColumnIndex("review_amount")));
+            //item.setLikeAmount(cursor.getInt(cursor.getColumnIndex("like_amount")));
+            item.setUrl(cursor.getString(cursor.getColumnIndex("content_url")));
+            item.setDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
+            item.setAuthor_name(cursor.getString(cursor.getColumnIndex("release_source")));
+            item.setThumbnail_pic_s(cursor.getString(cursor.getColumnIndex("cover_pic1_url")));
+            item.setThumbnail_pic_s(cursor.getString(cursor.getColumnIndex("cover_pic2_url")));
+            item.setThumbnail_pic_s(cursor.getString(cursor.getColumnIndex("cover_pic3_url")));
+            //item.setPic(cursor.getInt(cursor.getColumnIndex("cover_pic_id")));
+            result.add(item);
+        }
+        cursor.close();
+        return result;
+    }
+
+    public List<NewsBean.ResultBean.DataBean> getNewsDataBeanList(int start, int len) {
+        List<NewsBean.ResultBean.DataBean> result = new ArrayList<>();
+        // news_table (news_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url, cover_pic2_url, cover_pic3_url)
+        Cursor cursor = db.query("news_table", null, null, null, null, null, null, ""+start+","+len+"");
+        while (cursor.moveToNext()) {
+            NewsBean.ResultBean.DataBean item = new NewsBean.ResultBean.DataBean();
+            item.setUniquekey(cursor.getString(cursor.getColumnIndex("news_id")));
+            item.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+            //item.setIntroduction(cursor.getString(cursor.getColumnIndex("digest")));
+            //item.setReadAmount(cursor.getInt(cursor.getColumnIndex("read_amount")));
+            //item.setReviewAmount(cursor.getInt(cursor.getColumnIndex("review_amount")));
+            //item.setLikeAmount(cursor.getInt(cursor.getColumnIndex("like_amount")));
+            item.setUrl(cursor.getString(cursor.getColumnIndex("content_url")));
+            item.setDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
+            item.setAuthor_name(cursor.getString(cursor.getColumnIndex("release_source")));
+            item.setThumbnail_pic_s(cursor.getString(cursor.getColumnIndex("cover_pic1_url")));
+            item.setThumbnail_pic_s(cursor.getString(cursor.getColumnIndex("cover_pic2_url")));
+            item.setThumbnail_pic_s(cursor.getString(cursor.getColumnIndex("cover_pic3_url")));
+            result.add(item);
+        }
+        cursor.close();
+        return result;
+    }
+
+    public boolean findNews(String id) {
+        Cursor cursor = db.query("news_table", null, "news_id = ?", new String[]{id}, null, null, null);
+        if (cursor.moveToNext()) {
+            return true;
+        } else return false;
+    }
+
+    public void addNewsDataBean(NewsBean.ResultBean.DataBean item) {
+        db.beginTransaction();
+        try {
+            // news_table (news_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url, cover_pic2_url, cover_pic3_url)
+            db.execSQL("insert into news_table values(?, ?, ?, ?, 0, 0, 0, ?, ?, ?, ?, ?, ?)", new Object[]{item.getUniquekey(), item.getTitle(), item.getCategory(), "摘要", item.getUrl(), item.getDate(), item.getAuthor_name(), item.getThumbnail_pic_s(), item.getThumbnail_pic_s02(), item.getThumbnail_pic_s03()});
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void deleteNewsDataBean(long id) {
+        String sql = "delete from news_table where news_id = '"+ id +"'";
+        db.beginTransaction();
+        try {
+            db.execSQL(sql);
+            db.setTransactionSuccessful();
+        }finally {
+            db.endTransaction();
+        }
+    }
+
+    /*
+     * Favorite News
+     *
+    public List<NewsDisplayItem> getNewsFavoriteDisplayItemList() {
+        List<NewsDisplayItem> result = new ArrayList<>();
+        //favorite_table (favorite_id, user_id, news_id)
+        Cursor cursor = db.query("favorite_table", null, null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            NewsDisplayItem item = new NewsDisplayItem();
+            item.setId(cursor.getInt(cursor.getColumnIndex("news_id")));
+            item.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+            item.setIntroduction(cursor.getString(cursor.getColumnIndex("digest")));
+            item.setContent(cursor.getString(cursor.getColumnIndex("content")));
+            item.setLastEditTime(cursor.getString(cursor.getColumnIndex("last_edit_time")));
+            //item.setAuthor(cursor.getInt(cursor.getColumnIndex("release_user_id")));
+            //item.setPic(cursor.getInt(cursor.getColumnIndex("cover_pic_id")));
+            result.add(item);
+        }
+        cursor.close();
+        return result;
+    }
+
+    public void addNewsFavoriteDisplayItem(NewsDisplayItem item) {
+        db.beginTransaction();
+        try {
+            //favorite_table (favorite_id, user_id, news_id)
+            db.execSQL("insert into favorite_table values(null, ?, ?)", new Object[]{item.getTitle(), item.getCategory(), item.getIntroduction(), item.getContent(), item.getLastEditTime(), "Author", R.drawable.logo_news_fill_2});
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void deleteNewsFavoriteDisplayItem(long id) {
+        String sql = "delete from favorite_table where news_id = "+id;
+        db.beginTransaction();
+        try {
+            db.execSQL(sql);
+            db.setTransactionSuccessful();
+        }finally {
+            db.endTransaction();
+        }
+    }*/
+
+    /*
+     * History
+     *
+    public List<NewsDisplayItem> getNewsHistoryDisplayItemList() {
+        List<NewsDisplayItem> result = new ArrayList<>();
+        //history_table (history_id, user_id, news_id)
+        Cursor cursor = db.query("history_table", null, null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            NewsDisplayItem item = new NewsDisplayItem();
+            item.setId(cursor.getInt(cursor.getColumnIndex("news_id")));
+            item.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+            item.setIntroduction(cursor.getString(cursor.getColumnIndex("digest")));
+            item.setContent(cursor.getString(cursor.getColumnIndex("content")));
+            item.setLastEditTime(cursor.getString(cursor.getColumnIndex("last_edit_time")));
+            //item.setAuthor(cursor.getInt(cursor.getColumnIndex("release_user_id")));
+            //item.setPic(cursor.getInt(cursor.getColumnIndex("cover_pic_id")));
+            result.add(item);
+        }
+        cursor.close();
+        return result;
+    }
+
+    public void addNewsHistoryDisplayItem(NewsDisplayItem item) {
+        db.beginTransaction();
+        try {
+            //history_table (history_id, user_id, news_id)
+            db.execSQL("insert into history_table values(null, ?, ?)", new Object[]{item.getTitle(), item.getCategory(), item.getIntroduction(), item.getContent(), item.getLastEditTime(), "Author", R.drawable.logo_news_fill_2});
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void deleteNewsHistoryDisplayItem(long id) {
+        String sql = "delete from history_table where news_id = "+id;
+        db.beginTransaction();
+        try {
+            db.execSQL(sql);
+            db.setTransactionSuccessful();
+        }finally {
+            db.endTransaction();
+        }
+    }*/
+
+    /*
+     * Follow Users
+     *
+    public List<FollowItem> getFollowItemList() {
+        List<FollowItem> result = new ArrayList<>();
+        //follow_table (follow_id, follow_user_id, befollowed_user_id)
+        Cursor cursor = db.query("follow_table", null, null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            FollowItem item = new FollowItem();
+            item.setId(cursor.getInt(cursor.getColumnIndex("news_id")));
+            //item.setAuthor(cursor.getInt(cursor.getColumnIndex("release_user_id")));
+            //item.setPic(cursor.getInt(cursor.getColumnIndex("cover_pic_id")));
+            result.add(item);
+        }
+        cursor.close();
+        return result;
+    }
+
+    public void addFollowItem(FollowItem item) {
+        db.beginTransaction();
+        try {
+            //follow_table (follow_id, follow_user_id, befollowed_user_id)
+            db.execSQL("insert into follow_table values(null, ?, ?)", new Object[]{item.getTitle(), item.getCategory(), item.getIntroduction(), item.getContent(), item.getLastEditTime(), "Author", R.drawable.logo_news_fill_2});
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void deleteFollowItem(long id) {
+        String sql = "delete from history_table where news_id = "+id;
+        db.beginTransaction();
+        try {
+            db.execSQL(sql);
+            db.setTransactionSuccessful();
+        }finally {
+            db.endTransaction();
+        }
+    }*/
+}

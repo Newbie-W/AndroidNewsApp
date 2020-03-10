@@ -6,4 +6,7 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/addNewsItem"
+        android:title="十 发布新内容" />
 </menu>

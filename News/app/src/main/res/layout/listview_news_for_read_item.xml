@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textViewTitle_listview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:text="标题"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/textViewAuthor_listview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewTitle_listview"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="55dp"
+        android:text="News官方作者"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/imageViewNewsPic_listview"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:background="#8003A9F4"
+        android:src="@drawable/abc_btn_radio_material" />
+
+    <TextView
+        android:id="@+id/textViewIntroduction_listview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewAuthor_listview"
+        android:layout_alignLeft="@id/imageViewNewsPic_listview"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="75dp"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@id/imageViewNewsPic_listview"
+        android:maxLines="2"
+        android:text="这是一段引言，这是一段引言，这是一段引言，这是一段引言。这是一段引言，这是一段引言，这是一段引言，这是一段引言。这是一段引言，这是一段引言，这是一段引言，这是一段引言。这是一段引言，这是一段引言，这是一段引言，这是一段引言。" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewIntroduction_listview"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="10dp">
+
+        <ImageView
+            android:id="@+id/imageViewLike_listview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:adjustViewBounds="true"
+            android:maxHeight="20dp"
+            app:srcCompat="@drawable/ic_home_like_down" />
+
+        <TextView
+            android:id="@+id/textViewLikeAmount_listview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/imageViewLike_listview"
+            android:layout_marginLeft="3dp"
+            android:layout_toRightOf="@id/imageViewLike_listview"
+            android:text="0" />
+
+        <ImageView
+            android:id="@+id/imageViewRead_listview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/imageViewLike_listview"
+            android:layout_marginLeft="90dp"
+            android:adjustViewBounds="true"
+            android:maxHeight="20dp"
+            app:srcCompat="@drawable/ic_home_read" />
+
+        <TextView
+            android:id="@+id/textViewReadAmount_listview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/imageViewRead_listview"
+            android:layout_marginLeft="3dp"
+            android:layout_toRightOf="@id/imageViewRead_listview"
+            android:text="0" />
+
+        <ImageView
+            android:id="@+id/imageViewReview_listview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/imageViewLike_listview"
+            android:layout_marginLeft="160dp"
+            android:adjustViewBounds="true"
+            android:maxHeight="20dp"
+            app:srcCompat="@drawable/ic_home_review" />
+
+        <TextView
+            android:id="@+id/textViewReviewAmount_listview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/imageViewReview_listview"
+            android:layout_marginLeft="3dp"
+            android:layout_toRightOf="@id/imageViewReview_listview"
+            android:text="0" />
+
+        <TextView
+            android:id="@+id/textViewLastEditTime_listview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/imageViewLike_listview"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="15dp"
+            android:text="2020-01-01" />
+    </RelativeLayout>
+
+</RelativeLayout>

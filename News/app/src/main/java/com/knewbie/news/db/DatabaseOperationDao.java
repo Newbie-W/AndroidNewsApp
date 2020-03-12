@@ -109,8 +109,8 @@ public class DatabaseOperationDao {
             item.setDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
             item.setAuthor_name(cursor.getString(cursor.getColumnIndex("release_source")));
             item.setThumbnail_pic_s(cursor.getString(cursor.getColumnIndex("cover_pic1_url")));
-            item.setThumbnail_pic_s(cursor.getString(cursor.getColumnIndex("cover_pic2_url")));
-            item.setThumbnail_pic_s(cursor.getString(cursor.getColumnIndex("cover_pic3_url")));
+            item.setThumbnail_pic_s02(cursor.getString(cursor.getColumnIndex("cover_pic2_url")));
+            item.setThumbnail_pic_s03(cursor.getString(cursor.getColumnIndex("cover_pic3_url")));
             //item.setPic(cursor.getInt(cursor.getColumnIndex("cover_pic_id")));
             result.add(item);
         }
@@ -134,8 +134,8 @@ public class DatabaseOperationDao {
             item.setDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
             item.setAuthor_name(cursor.getString(cursor.getColumnIndex("release_source")));
             item.setThumbnail_pic_s(cursor.getString(cursor.getColumnIndex("cover_pic1_url")));
-            item.setThumbnail_pic_s(cursor.getString(cursor.getColumnIndex("cover_pic2_url")));
-            item.setThumbnail_pic_s(cursor.getString(cursor.getColumnIndex("cover_pic3_url")));
+            item.setThumbnail_pic_s02(cursor.getString(cursor.getColumnIndex("cover_pic2_url")));
+            item.setThumbnail_pic_s03(cursor.getString(cursor.getColumnIndex("cover_pic3_url")));
             result.add(item);
         }
         cursor.close();
@@ -154,6 +154,7 @@ public class DatabaseOperationDao {
         try {
             // news_table (news_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url, cover_pic2_url, cover_pic3_url)
             db.execSQL("insert into news_table values(?, ?, ?, ?, 0, 0, 0, ?, ?, ?, ?, ?, ?)", new Object[]{item.getUniquekey(), item.getTitle(), item.getCategory(), "摘要", item.getUrl(), item.getDate(), item.getAuthor_name(), item.getThumbnail_pic_s(), item.getThumbnail_pic_s02(), item.getThumbnail_pic_s03()});
+            //Log.d("hello", "pic2"+item.getThumbnail_pic_s02()+"pic3"+item.getThumbnail_pic_s03());
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();

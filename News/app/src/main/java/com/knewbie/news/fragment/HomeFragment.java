@@ -53,6 +53,7 @@ public class HomeFragment extends Fragment {
     private NewsForReadRecyclerViewAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private FloatingActionButton fab;
+    //private SearchView searchView;
     private List<NewsBean.ResultBean.DataBean> newsBeanList;
     private final int GET_NEWS_FROM_INTERNET = 0;
     private final int GET_NEWS_FROM_DB = 1;
@@ -106,6 +107,21 @@ public class HomeFragment extends Fragment {
     }
 	
     private void initView() {
+        /*searchView = mRootView.findViewById(R.id.home_searchView);
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Toast.makeText(getActivity(), query, Toast.LENGTH_LONG).show();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });*/
         swipeRefreshLayout = mRootView.findViewById(R.id.swipeRefreshLayout_NewsForRead);
         //swipeRefreshLayout.setOnScrollChangeListener(new RecyclerView.OnScrollListener());
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -117,25 +133,25 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void run() {
                         swipeRefreshLayout.setRefreshing(false);
-                        Log.d("hello", "swipeRefresh-----1");
-                        // 下一步实现从数据库中读取数据刷新到listview适配器中
+                        //Log.d("hello", "swipeRefresh-----1");
+                        // 实现从数据库中读取数据刷新到listview适配器中
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 int start = (page-1) * len;
                                 NewsBean newsBean = new NewsBean();
-                                Log.d("hello", "swipeRefresh-----2");
+                                //Log.d("hello", "swipeRefresh-----2");
                                 GlobalApplication globalApplication = (GlobalApplication) getActivity().getApplication();
                                 DatabaseOperationDao dbManager = globalApplication.getDatabaseOperationDao();
                                 List<NewsBean.ResultBean.DataBean> dataBeanList = dbManager.getNewsDataBeanList(start, len);
                                 newsBean.setResult(new NewsBean.ResultBean());
                                 newsBean.getResult().setData(dataBeanList);
-                                Log.d("hello", "swipeRefresh-----3getDBList");
+                                //Log.d("hello", "swipeRefresh-----3getDBList");
                                 Message message = newsMessageHandler.obtainMessage();
                                 message.what = GET_NEWS_FROM_INTERNET;
                                 message.obj = newsBean;
                                 newsMessageHandler.sendMessage(message);
-                                Log.d("hello", "swipeRefresh-----4sendMessage");
+                                //Log.d("hello", "swipeRefresh-----4sendMessage");
                             }
                         }).start();
                     }
@@ -191,6 +207,7 @@ public class HomeFragment extends Fragment {
                 }).start();
                 Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
                 intent.putExtra("url", url);
+                Log.d("hello, url = ", url+" 。");
                 startActivity(intent);
             }
         });

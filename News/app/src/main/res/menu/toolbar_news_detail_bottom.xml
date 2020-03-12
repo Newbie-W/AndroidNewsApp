@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/toolbarItem_like"
+        android:icon="@drawable/ic_home_like_down"
+        android:title="喜欢"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/toolbarItem_review"
+        android:icon="@drawable/ic_home_review"
+        android:title="评论"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/toolbarItem_collect"
+        android:icon="@drawable/ic_menu_favorite"
+        android:title="收藏"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/toolbarItem_share"
+        android:icon="@drawable/ic_menu_share"
+        android:title="分享"
+        app:showAsAction="ifRoom" />
+
+</menu>

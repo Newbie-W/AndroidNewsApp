@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.NewsDetailActivity"></activity>
+        <activity android:name=".activity.NewsDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".activity.AddNewsOrVideoActivity" />
         <activity android:name=".activity.InformationActivity" />
         <activity android:name=".activity.HistoryActivity" />

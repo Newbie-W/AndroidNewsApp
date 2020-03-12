@@ -7,64 +7,28 @@
     tools:context=".activity.NewsDetailActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarNewsDetail"
+        android:id="@+id/toolbarTop_NewsDetail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" />
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <RelativeLayout
-        android:id="@+id/layoutNewsDetailMainContent"
+    <WebView
+        android:id="@+id/webView_newsDetail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbarNewsDetail"
-        android:padding="10dp">
-
-        <TextView
-            android:id="@+id/textViewNewsDetailTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="TextView"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/textViewNewsDetailAuthor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textViewNewsDetailTitle"
-            android:layout_marginTop="10dp"
-            android:text="TextView"
-            android:textColor="@android:color/black" />
-
-        <TextView
-            android:id="@+id/textViewNewsDetailTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textViewNewsDetailAuthor"
-            android:text="TextView"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/textViewNewsDetailContent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textViewNewsDetailTime"
-            android:layout_marginTop="20dp"
-            android:text="长篇大论长篇大论长篇大论长篇大论长篇大论长篇大论长篇大论长篇大论长篇大论长篇大论长篇大论长篇大论长篇大论长篇大论"
-            android:textColor="#000000" />
-    </RelativeLayout>
+        android:layout_above="@id/toolbarBottom_NewsDetail"
+        android:layout_below="@id/toolbarTop_NewsDetail" />
 
     <RelativeLayout
         android:id="@+id/layoutNewsDetail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:visibility="gone">
 
         <Button
             android:id="@+id/buttonNewsDetailReturn"
@@ -125,5 +89,15 @@
             android:minWidth="48dp"
             android:text="收藏" />
     </RelativeLayout>
+
+    <!-- android:theme="?attr/actionBarTheme" -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarBottom_NewsDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#ffffff"
+        android:minHeight="?attr/actionBarSize"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
 </RelativeLayout>

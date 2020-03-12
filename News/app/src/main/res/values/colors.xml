@@ -6,6 +6,6 @@
     <color name="default_dark_blue">#71c9ce</color>
     <color name="default_blue">#a6e3e9</color>
     <color name="default_light_blue">#CBF1F5</color>
-    <color name="default_lighter_blue">#e3fdfd</color>
+    <color name="default_lighter_blue">#E3FDFD</color>
     <color name="default_appBar_deeper_blue">#7190CE</color>
 </resources>

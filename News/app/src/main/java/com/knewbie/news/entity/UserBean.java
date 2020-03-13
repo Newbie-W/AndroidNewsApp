@@ -7,6 +7,7 @@ public class UserBean implements Serializable {
     private int id;
     private String username;
     private String password;
+    private String phone;
     private String avatar;
     private String emailAd;
     private String signature;
@@ -16,10 +17,20 @@ public class UserBean implements Serializable {
         this.password = password;
     }
 
-    public UserBean(int id, String username, String password, String avatar, String emailAd, String signature) {
+    /*public UserBean(int id, String username, String password, String avatar, String emailAd, String signature) {
         this.id = id;
         this.username = username;
         this.password = password;
+        this.avatar = avatar;
+        this.emailAd = emailAd;
+        this.signature = signature;
+    }*/
+
+    public UserBean(int id, String username, String password, String phone, String avatar, String emailAd, String signature) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.phone = phone;
         this.avatar = avatar;
         this.emailAd = emailAd;
         this.signature = signature;
@@ -28,9 +39,18 @@ public class UserBean implements Serializable {
     public UserBean() {
     }
 
-    public UserBean(String username, String password, String avatar, String emailAd, String signature) {
+    /*public UserBean(String username, String password, String avatar, String emailAd, String signature) {
         this.username = username;
         this.password = password;
+        this.avatar = avatar;
+        this.emailAd = emailAd;
+        this.signature = signature;
+    }*/
+
+    public UserBean(String username, String password, String phone, String avatar, String emailAd, String signature) {
+        this.username = username;
+        this.password = password;
+        this.phone = phone;
         this.avatar = avatar;
         this.emailAd = emailAd;
         this.signature = signature;
@@ -58,6 +78,14 @@ public class UserBean implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getAvatar() {

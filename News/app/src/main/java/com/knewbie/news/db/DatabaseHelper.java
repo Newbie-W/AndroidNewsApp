@@ -26,7 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private void initTable(SQLiteDatabase db) {
         //String sql = "create table accountincometype(id integer primary key autoincrement, category text, icon integer)";
-        String sql = "create table user_table(user_id integer primary key autoincrement, username text, password text, email_address text, signature text, is_auth boolean, pic_id varchar(120))";
+        String sql = "create table user_table(user_id integer primary key autoincrement, username text, password text, phone text unique, email_address text, signature text, is_auth boolean, pic_id varchar(120))";
         db.execSQL(sql);
         sql = "create table news_table(news_id text primary key, title text, type text, digest text, read_amount integer, review_amount integer, like_amount integer, content_url text, last_edit_time text, release_source text, cover_pic1_url text, cover_pic2_url text, cover_pic3_url text)";
         db.execSQL(sql);
@@ -64,18 +64,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //String sql = String.format("insert into accountincometype(category, icon) values('工资', %d)", R.drawable.);
 
         //SQLite序号从1开始
-        //user_table (user_id, username, password, email_address, signature, is_auth, pic_id)
-        String sql = "insert into user_table(username, password, email_address, signature, is_auth, pic_id) values('admin', 'admin', null, null, 0, 0)";
+        //user_table (user_id, username, password, phone, email_address, signature, is_auth, pic_id)
+        String sql = "insert into user_table(username, password, phone, email_address, signature, is_auth, pic_id) values('admin', 'admin', null, '1078957527@qq.com', null, 0, 0)";
         db.execSQL(sql);
-        sql = "insert into user_table(username, password, email_address, signature, is_auth) values('0', '0', null, '一段个性签名', 0)";
+        sql = "insert into user_table(username, password, phone, email_address, signature, is_auth) values('0', '0', null, null, '一段个性签名', 0)";
         db.execSQL(sql);
-        sql = "insert into user_table(username, password, email_address, signature, is_auth) values('1', '1', null, '一段个性签名', 0)";
+        sql = "insert into user_table(username, password, phone, email_address, signature, is_auth) values('1', '1', null, null, '一段个性签名', 0)";
         db.execSQL(sql);
-        sql = "insert into user_table(username, password, email_address, signature, is_auth) values('News作者1', '1', null, null, 0)";
+        sql = "insert into user_table(username, password, phone, email_address, signature, is_auth) values('News作者1', '1', null, null, null, 0)";
         db.execSQL(sql);
-        sql = "insert into user_table(username, password, email_address, signature, is_auth) values('用户1', '1', null, null, 0)";
+        sql = "insert into user_table(username, password, phone, email_address, signature, is_auth) values('用户1', '1', null, null, null, 0)";
         db.execSQL(sql);
-        sql = "insert into user_table(username, password, email_address, signature, is_auth) values('用户2', '1', null, null, 0)";
+        sql = "insert into user_table(username, password, phone, email_address, signature, is_auth) values('用户2', '1', null, null, null, 0)";
         db.execSQL(sql);
 
 

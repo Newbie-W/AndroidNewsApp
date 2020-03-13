@@ -30,6 +30,13 @@ public class DatabaseOperationDao {
         } else return false;
     }
 
+    public boolean findUserPhone(String phone) {
+        Cursor cursor = db.query("user_table", null, "phone = ?", new String[]{phone}, null, null, null);
+        if (cursor.moveToNext()) {
+            return true;
+        } else return false;
+    }
+
     public UserBean findUser(String username, String pwd) {
         UserBean userBean;
         Cursor cursor = db.query("user_table", null, "username = ? and password = ?", new String[]{username, pwd}, null, null, null);
@@ -38,6 +45,7 @@ public class DatabaseOperationDao {
             userBean.setId(cursor.getInt(cursor.getColumnIndex("user_id")));
             userBean.setUsername(cursor.getString(cursor.getColumnIndex("username")));
             userBean.setPassword(cursor.getString(cursor.getColumnIndex("password")));
+            userBean.setPhone(cursor.getString(cursor.getColumnIndex("phone")));
             userBean.setEmailAd(cursor.getString(cursor.getColumnIndex("email_address")));
             userBean.setSignature(cursor.getString(cursor.getColumnIndex("signature")));
             //userBean.setAvatar(R.drawable.ic_appbar_user);
@@ -46,15 +54,35 @@ public class DatabaseOperationDao {
 
         return userBean;
     }
+
+    public UserBean findUserByPhone(String phone) {
+        UserBean userBean;
+        Cursor cursor = db.query("user_table", null, "username = ?", new String[]{phone}, null, null, null);
+        if (cursor.moveToNext()) {
+            userBean = new UserBean();
+            userBean.setId(cursor.getInt(cursor.getColumnIndex("user_id")));
+            userBean.setUsername(cursor.getString(cursor.getColumnIndex("username")));
+            userBean.setPassword(cursor.getString(cursor.getColumnIndex("password")));
+            userBean.setPhone(cursor.getString(cursor.getColumnIndex("phone")));
+            userBean.setEmailAd(cursor.getString(cursor.getColumnIndex("email_address")));
+            userBean.setSignature(cursor.getString(cursor.getColumnIndex("signature")));
+            //userBean.setAvatar(R.drawable.ic_appbar_user);
+            cursor.close();
+        } else return null; //此种情况，用户名或密码不存在
+
+        return userBean;
+    }
+
     public List<UserBean> getUser() {
         List<UserBean> result = new ArrayList<>();
-        //user_table(user_id, username, password, email_address, signature, is_auth, pic_id)
+        //user_table(user_id, username, password, phone, email_address, signature, is_auth, pic_id)
         Cursor cursor = db.query("user_table", null, null, null, null, null, null);
         while (cursor.moveToNext()) {
             UserBean item = new UserBean();
             item.setId(cursor.getInt(cursor.getColumnIndex("user_id")));
             item.setUsername(cursor.getString(cursor.getColumnIndex("username")));
             item.setPassword(cursor.getString(cursor.getColumnIndex("password")));
+            item.setPhone(cursor.getString(cursor.getColumnIndex("phone")));
             item.setEmailAd(cursor.getString(cursor.getColumnIndex("eemail_address")));
             item.setSignature(cursor.getString(cursor.getColumnIndex("signature")));
             //item.setAvatar(R.drawable.ic_appbar_user);
@@ -67,8 +95,8 @@ public class DatabaseOperationDao {
     public void addUser(UserBean item) {
         db.beginTransaction();
         try {
-            //user_table(user_id, username, password, email_address, signature, is_auth, pic_id)
-            db.execSQL("insert into user_table values(null, ?, ?, ?, ?, 0, ?)", new Object[]{item.getUsername(), item.getPassword(), item.getEmailAd(), item.getSignature(), R.drawable.ic_appbar_user});
+            //user_table(user_id, username, password, phone, email_address, signature, is_auth, pic_id)
+            db.execSQL("insert into user_table values(null, ?, ?, ?, ?, ?, 0, ?)", new Object[]{item.getUsername(), item.getPassword(), item.getPhone(), item.getEmailAd(), item.getSignature(), R.drawable.ic_appbar_user});
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();

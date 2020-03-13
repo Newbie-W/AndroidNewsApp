@@ -19,9 +19,10 @@ import com.knewbie.news.global.GlobalApplication;
 
 public class LoginActivity extends AppCompatActivity {
 
-    Button btnLogin;
-    EditText editTextUname, editTextPwd;
-    TextView textViewRegister;
+    private Button btnLogin;
+    private EditText editTextUname, editTextPwd;
+    private TextView textViewRegister, textViewPhoneLogin;
+    private String phoneNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         editTextUname = (EditText) this.findViewById(R.id.editTextLoginUsername);
         editTextPwd = (EditText) this.findViewById(R.id.editTextLoginPassword);
         textViewRegister = (TextView) this.findViewById(R.id.textViewRegisterLink);
+        textViewPhoneLogin = this.findViewById(R.id.textView_phoneFastLogin);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,6 +43,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 register();
+            }
+        });
+        textViewPhoneLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                Intent intent = new Intent(LoginActivity.this, PhoneFastLoginActivity.class);
+                startActivity(intent);
             }
         });
 

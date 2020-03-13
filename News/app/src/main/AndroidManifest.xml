@@ -3,19 +3,30 @@
     package="com.knewbie.news">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 允许写手机存储 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 允许访问网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- GUI自动填充验证码功能-->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <!-- 从短信中读取验证码接口-->
+    <uses-permission android:name="android.permission.READ_SMS" />
 
     <application
         android:name=".global.GlobalApplication"
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".activity.NewsDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".activity.PhoneFastLoginActivity"></activity>
+        <activity
+            android:name=".activity.NewsDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.AddNewsOrVideoActivity" />
         <activity android:name=".activity.InformationActivity" />
         <activity android:name=".activity.HistoryActivity" />
@@ -53,9 +64,7 @@
             android:label="@string/register" />
         <activity
             android:name=".activity.LoginActivity"
-            android:label="@string/login">
-
-        </activity>
+            android:label="@string/login"></activity>
     </application>
 
 </manifest>

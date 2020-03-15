@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+<declare-styleable name="自定义属性名称">
+        <attr name="属性名称" format="属性类型" />
+</declare-styleable>
+-->
+<resources>
+    <declare-styleable name="ItemGroup">
+        <attr name="title" format="string" />
+        <attr name="title_size" format="dimension" />
+        <attr name="title_color" format="color" />
+        <attr name="content_text" format="string" />
+        <attr name="content_size" format="dimension" />
+        <attr name="content_color" format="color" />
+        <!--
+        <attr name="editHint_content" format="string" />
+        <attr name="editHint_color" format="color" />
+        <attr name="editText_isEditable" format="boolean" />
+        -->
+        <attr name="nextChoice_visible" format="boolean" />
+        <attr name="paddingLeft" format="dimension" />
+        <attr name="paddingRight" format="dimension" />
+        <attr name="paddingTop" format="dimension" />
+        <attr name="paddingBottom" format="dimension" />
+        <attr name="drawable_left" format="reference" />
+        <attr name="drawable_right" format="reference" />
+    </declare-styleable>
+</resources>

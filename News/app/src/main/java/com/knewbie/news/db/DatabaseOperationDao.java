@@ -3,6 +3,7 @@ package com.knewbie.news.db;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.knewbie.news.R;
 import com.knewbie.news.entity.NewsBean;
@@ -20,6 +21,12 @@ public class DatabaseOperationDao {
         db = databaseHelper.getWritableDatabase();
     }
 
+
+    public void updateTable(String table, String setSql, String whereSql) {
+        String sql = "update "+table+ " set " +setSql+" where "+whereSql;
+        db.execSQL(sql);
+    }
+
     /*
      * User
      * */
@@ -30,12 +37,12 @@ public class DatabaseOperationDao {
         } else return false;
     }
 
-    public boolean findUserPhone(String phone) {
+    /*public boolean findUserPhone(String phone) {
         Cursor cursor = db.query("user_table", null, "phone = ?", new String[]{phone}, null, null, null);
         if (cursor.moveToNext()) {
             return true;
         } else return false;
-    }
+    }*/
 
     public UserBean findUser(String username, String pwd) {
         UserBean userBean;
@@ -57,7 +64,8 @@ public class DatabaseOperationDao {
 
     public UserBean findUserByPhone(String phone) {
         UserBean userBean;
-        Cursor cursor = db.query("user_table", null, "username = ?", new String[]{phone}, null, null, null);
+        Log.d("hello", ""+phone);
+        Cursor cursor = db.query("user_table", null, "phone = ?", new String[]{phone}, null, null, null);
         if (cursor.moveToNext()) {
             userBean = new UserBean();
             userBean.setId(cursor.getInt(cursor.getColumnIndex("user_id")));

@@ -28,6 +28,7 @@ import com.knewbie.news.activity.FavoriteActivity;
 import com.knewbie.news.activity.FollowActivity;
 import com.knewbie.news.activity.HistoryActivity;
 import com.knewbie.news.activity.InformationActivity;
+import com.knewbie.news.activity.MyInfoActivity;
 import com.knewbie.news.adapter.ViewPagerAdapter;
 import com.knewbie.news.entity.UserBean;
 import com.knewbie.news.fragment.HomeFragment;
@@ -41,6 +42,11 @@ public class MainActivity extends AppCompatActivity
 
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
+    private UserBean user;
+    private CircleImageView appBarIcon;
+    private TextView textViewUsername, textViewSignature;
+    private final int REQUESTCODE_ADDNEWS = 1;
+    private final int REQUESTCODE_SELFINFO = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,13 +121,21 @@ public class MainActivity extends AppCompatActivity
         Or use: headerView = navigationView.;inflateHeaderView(R.layout.nav_header_main)
         但这条，会使headerView变成两个（原来那条不会被替换）
         */
-        CircleImageView appBarIcon = headerView.findViewById(R.id.imageViewAppbarIcon);
-        TextView textViewUsername = headerView.findViewById(R.id.textViewAppbarUsername);
-        TextView textViewSignature = headerView.findViewById(R.id.textViewAppbarSignature);
-        UserBean user = (UserBean) getIntent().getSerializableExtra("userBean");
+        appBarIcon = headerView.findViewById(R.id.imageViewAppbarIcon);
+        textViewUsername = headerView.findViewById(R.id.textViewAppbarUsername);
+        textViewSignature = headerView.findViewById(R.id.textViewAppbarSignature);
+        user = (UserBean) getIntent().getSerializableExtra("userBean");
         //Toast.makeText(this, "登录成功", Toast.LENGTH_LONG).show();
         textViewUsername.setText(user.getUsername());
         if (user.getSignature()!= null)textViewSignature.setText(user.getSignature());
+        appBarIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, MyInfoActivity.class);
+                intent.putExtra("userBean", user);
+                startActivityForResult(intent, REQUESTCODE_SELFINFO);
+            }
+        });
     }
 
     @Override
@@ -170,7 +184,7 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.toolbarItem_addNewsItem) {
             Intent intent = new Intent(this, AddNewsOrVideoActivity.class);
-            startActivityForResult(intent, 1);
+            startActivityForResult(intent, REQUESTCODE_ADDNEWS);
             return true;
         }
 
@@ -221,11 +235,25 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //Log.d("helloworld", "activityOnActivityResult");
-        Fragment currentFragment = viewPagerAdapter.getInstantFragment();
-        //Toast.makeText(this, "Activity,"+currentFragment+","+((currentFragment instanceof HomeFragment)?"1":"0"), Toast.LENGTH_SHORT).show();
-        if (currentFragment != null && currentFragment instanceof HomeFragment) {
-            //Toast.makeText(this, "Activity", Toast.LENGTH_SHORT).show();
-            ((HomeFragment) currentFragment).refresh();
+        switch (requestCode) {
+            case REQUESTCODE_ADDNEWS:
+                if (resultCode == 1) {
+                    Fragment currentFragment = viewPagerAdapter.getInstantFragment();
+                    //Toast.makeText(this, "Activity,"+currentFragment+","+((currentFragment instanceof HomeFragment)?"1":"0"), Toast.LENGTH_SHORT).show();
+                    if (currentFragment != null && currentFragment instanceof HomeFragment) {
+                        //Toast.makeText(this, "Activity", Toast.LENGTH_SHORT).show();
+                        ((HomeFragment) currentFragment).refresh();
+                    }
+                }
+                break;
+            case REQUESTCODE_SELFINFO:
+                if (resultCode == 1) {
+                    Intent intent = getIntent();
+                    user = (UserBean) intent.getSerializableExtra("userBean");
+                    textViewUsername.setText(user.getUsername());
+                    if (user.getSignature()!= null)textViewSignature.setText(user.getSignature());
+                }
+                break;
         }
     }
 

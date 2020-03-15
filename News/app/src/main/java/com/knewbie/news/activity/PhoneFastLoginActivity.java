@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,10 +32,11 @@ public class PhoneFastLoginActivity extends AppCompatActivity {
 
     private Button btnGetPwd, btnLogin;
     private EditText editTextPhone, editTextPwd;
-    private TextView textViewSimpleLogin;
+    private TextView textViewSimpleLogin, textViewPwd, textViewChangePhoneLogin;
     private String APPKEY = "2e54ced420158";
     private String APPSECRET = "7f5c1039257770779e974508fe36cce5";
     private String phoneNum;
+    private boolean flagPhoneWithPwd = false;
     private int time = 60;
     private final int STORE_USER = 0;
     private final int CHANGE_BUTTON_GETTING_PWD = 1;
@@ -99,6 +102,25 @@ public class PhoneFastLoginActivity extends AppCompatActivity {
         editTextPhone = this.findViewById(R.id.editText_fastLogin_phoneNum);
         editTextPwd = this.findViewById(R.id.editText_fastLogin_password);
         textViewSimpleLogin = this.findViewById(R.id.textView_fastLogin_simpleLogin);
+        textViewPwd = findViewById(R.id.textView_fastLogin_password);
+        textViewChangePhoneLogin = findViewById(R.id.textView_fastLogin_phoneWithPwd);
+
+        editTextPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                phoneNum = editTextPhone.getText().toString();
+            }
+        });
         btnGetPwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,8 +130,12 @@ public class PhoneFastLoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String pwd = editTextPwd.getText().toString();
-                SMSSDK.submitVerificationCode("86", phoneNum, pwd);
+                if (flagPhoneWithPwd) login();
+                else {
+                    String pwd = editTextPwd.getText().toString();
+                    SMSSDK.submitVerificationCode("86", phoneNum, pwd);
+                }
+
             }
         });
         textViewSimpleLogin.setOnClickListener(new View.OnClickListener() {
@@ -118,6 +144,24 @@ public class PhoneFastLoginActivity extends AppCompatActivity {
                 finish();
                 Intent intent = new Intent(PhoneFastLoginActivity.this, LoginActivity.class);
                 startActivity(intent);
+            }
+        });
+        textViewChangePhoneLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (flagPhoneWithPwd) {     //原来为手机号、密码登录，现在改为手机号验证码方式
+                    btnGetPwd.setVisibility(View.VISIBLE);
+                    textViewPwd.setVisibility(View.GONE);
+                    textViewChangePhoneLogin.setText("手机号密码登录");
+                    editTextPwd.setHint("请输入验证码");
+                    flagPhoneWithPwd = false;
+                } else {
+                    btnGetPwd.setVisibility(View.GONE);
+                    textViewPwd.setVisibility(View.VISIBLE);
+                    textViewChangePhoneLogin.setText("手机号验证码登录");
+                    editTextPwd.setHint("请输入密码");
+                    flagPhoneWithPwd = true;
+                }
             }
         });
 
@@ -189,16 +233,27 @@ public class PhoneFastLoginActivity extends AppCompatActivity {
         GlobalApplication app = (GlobalApplication) this.getApplication();
         DatabaseOperationDao dbManager = app.getDatabaseOperationDao();
         UserBean userBean = dbManager.findUserByPhone(phoneNum);
-        if (userBean == null) {
-            Toast.makeText(this, "注册用户", Toast.LENGTH_SHORT).show();
-            userBean = register();
+        if (flagPhoneWithPwd) {
+            if (userBean == null) {
+                Toast.makeText(this, "该手机号尚未注册！", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (!editTextPwd.getText().toString().equals(userBean.getPassword())) {
+                Toast.makeText(this, "登录失败，密码错误", Toast.LENGTH_LONG).show();
+                return;
+            }
         } else {
-
+            if (userBean == null) {
+                Toast.makeText(this, "注册用户", Toast.LENGTH_SHORT).show();
+                userBean = register();
+            }/* else {}*/
         }
+
+        Log.d("hello", "hello, "+userBean.getUsername());
         Toast.makeText(this, "登录成功", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("userBean", userBean);
         startActivity(intent);
+        this.finish();
         //UserBean userBean = dbManager.findUser(phoneNum, pwd);
         /*if (phoneNum.equals(trueUname) && userInputPwd.equals(truePwd) || userBean !=  null) {
             //sharedPreferences.Editor editor = sharedPreferences.edit();

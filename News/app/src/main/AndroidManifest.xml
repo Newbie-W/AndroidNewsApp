@@ -2,16 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.knewbie.news">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- 允许写手机存储 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 允许写手机存储 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!-- 允许访问网络状态 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- GUI自动填充验证码功能-->
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <!-- 从短信中读取验证码接口-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 允许访问网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- GUI自动填充验证码功能 -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" /> <!-- 从短信中读取验证码接口 -->
     <uses-permission android:name="android.permission.READ_SMS" />
 
     <application
@@ -23,7 +19,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.PhoneFastLoginActivity"></activity>
+        <activity android:name=".activity.MyInfoActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".activity.PhoneFastLoginActivity" />
         <activity
             android:name=".activity.NewsDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -64,7 +63,7 @@
             android:label="@string/register" />
         <activity
             android:name=".activity.LoginActivity"
-            android:label="@string/login"></activity>
+            android:label="@string/login" />
     </application>
 
 </manifest>

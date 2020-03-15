@@ -62,6 +62,14 @@
             android:inputType="textPassword" />
          -->
 
+        <TextView
+            android:id="@+id/textView_fastLogin_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/password"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -111,29 +119,18 @@
             android:text="用户名登录"
             android:textColor="@color/colorPrimary" />
 
-        <!--
         <TextView
             android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-
-         <TextView
-            android:id="@+id/textViewForgetPwdLink"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:text="忘记密码"
-            android:textColor="@color/colorPrimary" />
-
         <TextView
-            android:id="@+id/textViewRegisterLink"
+            android:id="@+id/textView_fastLogin_phoneWithPwd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
-            android:text="注册用户"
+            android:text="手机号密码登录"
             android:textColor="@color/colorPrimary" />
-         -->
     </LinearLayout>
 </LinearLayout>

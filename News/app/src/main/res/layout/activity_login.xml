@@ -50,7 +50,7 @@
             android:inputType="textPersonName" />
 
         <TextView
-            android:id="@+id/textViewLoginPassword"
+            android:id="@+id/textView_fastLogin_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/password"

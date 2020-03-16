@@ -3,7 +3,9 @@ package com.knewbie.news;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +36,10 @@ import com.knewbie.news.entity.UserBean;
 import com.knewbie.news.fragment.HomeFragment;
 import com.knewbie.news.fragment.MyFragment;
 import com.knewbie.news.fragment.VideoFragment;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -73,6 +79,9 @@ public class MainActivity extends AppCompatActivity
 
         viewPager = findViewById(R.id.viewPager);
         setupViewPager(viewPager);
+
+        if (!ImageLoader.getInstance().isInited())
+            ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(this));
 
         final BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavView);
         bottomNavigationView.getMenu().getItem(1).setChecked(true);
@@ -127,7 +136,11 @@ public class MainActivity extends AppCompatActivity
         user = (UserBean) getIntent().getSerializableExtra("userBean");
         //Toast.makeText(this, "登录成功", Toast.LENGTH_LONG).show();
         textViewUsername.setText(user.getUsername());
-        if (user.getSignature()!= null)textViewSignature.setText(user.getSignature());
+        if (user.getSignature()!= null)
+            textViewSignature.setText(user.getSignature());
+        if (user.getAvatar() != null)
+            ImageLoader.getInstance().displayImage(user.getAvatar(), appBarIcon, getOption());
+        //else ImageLoader.getInstance().displayImage("drawable://"+R.drawable.ic_appbar_user, appBarIcon, getOption());
         appBarIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,6 +183,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public boolean onQueryTextSubmit(String query) {
                     Toast.makeText(MainActivity.this, query, Toast.LENGTH_LONG).show();
+                    Log.d("hello", "searchView"+query);
                     return false;
                 }
 
@@ -240,7 +254,7 @@ public class MainActivity extends AppCompatActivity
                 if (resultCode == 1) {
                     Fragment currentFragment = viewPagerAdapter.getInstantFragment();
                     //Toast.makeText(this, "Activity,"+currentFragment+","+((currentFragment instanceof HomeFragment)?"1":"0"), Toast.LENGTH_SHORT).show();
-                    if (currentFragment != null && currentFragment instanceof HomeFragment) {
+                    if (currentFragment instanceof HomeFragment) {   //currentFragment != null &&
                         //Toast.makeText(this, "Activity", Toast.LENGTH_SHORT).show();
                         ((HomeFragment) currentFragment).refresh();
                     }
@@ -248,10 +262,12 @@ public class MainActivity extends AppCompatActivity
                 break;
             case REQUESTCODE_SELFINFO:
                 if (resultCode == 1) {
-                    Intent intent = getIntent();
-                    user = (UserBean) intent.getSerializableExtra("userBean");
+                    user = (UserBean) data.getSerializableExtra("userBean");
+                    //Log.d("hello", "finally userBean---"+user.getUsername()+","+user.getSignature());
                     textViewUsername.setText(user.getUsername());
-                    if (user.getSignature()!= null)textViewSignature.setText(user.getSignature());
+                    if (user.getSignature()!= null) textViewSignature.setText(user.getSignature());
+                    if (user.getAvatar() != null)
+                        ImageLoader.getInstance().displayImage(user.getAvatar(), appBarIcon, getOption());
                 }
                 break;
         }
@@ -267,5 +283,21 @@ public class MainActivity extends AppCompatActivity
         viewPagerAdapter.addFragment(myFragment);
         viewPager.setAdapter(viewPagerAdapter);
         viewPager.setCurrentItem(1);
+    }
+
+    public static DisplayImageOptions getOption() {
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                // .showImageOnLoading(R.drawable.logo_news_fill_2)    // 设置图片下载期间显示的图片
+                .showImageForEmptyUri(R.mipmap.ic_launcher)         // 设置图片Uri为空或是错误的时候显示的图片
+                .showImageOnFail(R.mipmap.ic_launcher)              // 设置图片加载或解码过程中发生错误显示的图片
+                .resetViewBeforeLoading(true)                       // default 设置图片在加载前是否重置、复位
+                .delayBeforeLoading(1000)                           // 下载前的延迟时间
+                .cacheInMemory(true)                                // default  设置下载的图片是否缓存在内存中
+                .cacheOnDisk(true)                                  // default  设置下载的图片是否缓存在SD卡中
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)   // default 设置图片以如何的编码方式显示
+                .bitmapConfig(Bitmap.Config.RGB_565)                // default 设置图片的解码类型
+                .build();
+
+        return options;
     }
 }

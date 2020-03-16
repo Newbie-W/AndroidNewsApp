@@ -55,7 +55,8 @@ public class DatabaseOperationDao {
             userBean.setPhone(cursor.getString(cursor.getColumnIndex("phone")));
             userBean.setEmailAd(cursor.getString(cursor.getColumnIndex("email_address")));
             userBean.setSignature(cursor.getString(cursor.getColumnIndex("signature")));
-            //userBean.setAvatar(R.drawable.ic_appbar_user);
+            if (userBean == null) userBean.setAvatar("drawable://"+R.drawable.ic_appbar_user);
+            else userBean.setAvatar(cursor.getString(cursor.getColumnIndex("pic")));
             cursor.close();
         } else return null; //此种情况，用户名或密码不存在
 
@@ -74,7 +75,8 @@ public class DatabaseOperationDao {
             userBean.setPhone(cursor.getString(cursor.getColumnIndex("phone")));
             userBean.setEmailAd(cursor.getString(cursor.getColumnIndex("email_address")));
             userBean.setSignature(cursor.getString(cursor.getColumnIndex("signature")));
-            //userBean.setAvatar(R.drawable.ic_appbar_user);
+            if (userBean == null) userBean.setAvatar("drawable://"+R.drawable.ic_appbar_user);
+            else userBean.setAvatar(cursor.getString(cursor.getColumnIndex("pic")));
             cursor.close();
         } else return null; //此种情况，用户名或密码不存在
 
@@ -91,9 +93,11 @@ public class DatabaseOperationDao {
             item.setUsername(cursor.getString(cursor.getColumnIndex("username")));
             item.setPassword(cursor.getString(cursor.getColumnIndex("password")));
             item.setPhone(cursor.getString(cursor.getColumnIndex("phone")));
-            item.setEmailAd(cursor.getString(cursor.getColumnIndex("eemail_address")));
+            item.setEmailAd(cursor.getString(cursor.getColumnIndex("email_address")));
             item.setSignature(cursor.getString(cursor.getColumnIndex("signature")));
             //item.setAvatar(R.drawable.ic_appbar_user);
+            if (item == null) item.setAvatar("drawable://"+R.drawable.ic_appbar_user);
+            else item.setAvatar(cursor.getString(cursor.getColumnIndex("pic")));
             result.add(item);
         }
         cursor.close();
@@ -103,8 +107,8 @@ public class DatabaseOperationDao {
     public void addUser(UserBean item) {
         db.beginTransaction();
         try {
-            //user_table(user_id, username, password, phone, email_address, signature, is_auth, pic_id)
-            db.execSQL("insert into user_table values(null, ?, ?, ?, ?, ?, 0, ?)", new Object[]{item.getUsername(), item.getPassword(), item.getPhone(), item.getEmailAd(), item.getSignature(), R.drawable.ic_appbar_user});
+            //user_table(user_id, username, password, phone, email_address, signature, is_auth, pic)
+            db.execSQL("insert into user_table values(null, ?, ?, ?, ?, ?, 0, ?)", new Object[]{item.getUsername(), item.getPassword(), item.getPhone(), item.getEmailAd(), item.getSignature(), "drawable://"+R.drawable.ic_appbar_user});
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();

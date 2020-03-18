@@ -37,18 +37,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
         sql = "create table reply_table (reply_id integer primary key autoincrement, sender_user_id integer, review_id integer, review_time text, review_content text)";
         db.execSQL(sql);
-        sql = "create table feedback_table (feedback_id integer primary key autoincrement, feedback_content, feedback_time, feedback_user_id) ";
+        sql = "create table feedback_table (feedback_id integer primary key autoincrement, feedback_content text, feedback_time text, feedback_user_id integer) ";
         db.execSQL(sql);
         */
-        sql = "create table favorite_table (favorite_id integer primary key autoincrement, user_id, news_id)";
+        sql = "create table favorite_table (favorite_id integer primary key autoincrement, user_id integer, news_id text)";  //收藏
         db.execSQL(sql);
         /* 分享记录
-        sql = "create table share_table (share_id integer primary key autoincrement, user_id, news_id)";
+        sql = "create table share_table (share_id integer primary key autoincrement, user_id integer, news_id text)";
         db.execSQL(sql);
         */
-        sql = "create table follow_table (follow_id integer primary key autoincrement, follow_user_id, befollowed_user_id)";
+        sql = "create table follow_table (follow_id integer primary key autoincrement, follow_user_id integer, befollowed_user_id integer)";
         db.execSQL(sql);
-        sql = "create table history_table (history_id integer primary key autoincrement, user_id, news_id)";
+        sql = "create table history_table (history_id integer primary key autoincrement, user_id integer, news_id text)";
         db.execSQL(sql);
         /* 打赏记录*
         sql = "create table tip_table (tip_id integer primary key autoincrement, user_id, news_id)";
@@ -102,12 +102,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //feedback_table (feedback_id, feedback_content, feedback_time, feedback_user_id)
 
         //favorite_table (favorite_id, user_id, news_id)
-        sql = "insert into favorite_table(user_id, news_id) values(2, 1)";
+        /*sql = "insert into favorite_table(user_id, news_id) values(2, 1)";
         db.execSQL(sql);
         sql = "insert into favorite_table(user_id, news_id) values(2, 3)";
         db.execSQL(sql);
         sql = "insert into favorite_table(user_id, news_id) values(2, 4)";
-        db.execSQL(sql);
+        db.execSQL(sql);*/
 
         //share_table (share_id, user_id, news_id)
 

@@ -61,9 +61,10 @@ public class MyInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_info);
         if (!ImageLoader.getInstance().isInited())
             ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(this));
-        userBean = (UserBean) getIntent().getSerializableExtra("userBean");
+        //userBean = (UserBean) getIntent().getSerializableExtra("userBean");
+        GlobalApplication application = (GlobalApplication) getApplication();
+        userBean = application.getUserBean();
         initView();
-
     }
 
     private void initView() {
@@ -74,7 +75,10 @@ public class MyInfoActivity extends AppCompatActivity {
         itemGroupEmail = findViewById(R.id.itemGroup_email);
         itemGroupSignature = findViewById(R.id.itemGroup_signature);
         toolbarTop = findViewById(R.id.toolbarTop_myInfo);
-        ImageLoader.getInstance().displayImage(userBean.getAvatar(), imageViewAvatar, getOption());
+        if (userBean.getAvatar() != null)
+            ImageLoader.getInstance().displayImage(userBean.getAvatar(), imageViewAvatar, getOption());
+        else
+            ImageLoader.getInstance().displayImage("drawable://"+R.drawable.ic_appbar_user, imageViewAvatar, getOption());
         itemGroupName.setText(userBean.getUsername());
         itemGroupPhone.setText(userBean.getPhone());
         itemGroupEmail.setText(userBean.getEmailAd());
@@ -102,9 +106,22 @@ public class MyInfoActivity extends AppCompatActivity {
                 builder.setPositiveButton("修改", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        changeInfo(editText, "用户名", "username");
-                        userBean.setUsername(editText.getText().toString());
-                        itemGroupName.setText(userBean.getUsername());
+                        //changeInfo(editText, "用户名", "username");
+                        String input = editText.getText().toString();
+                        if (input == null || input.equals("")){
+
+                        }else {
+                            GlobalApplication globalApplication = (GlobalApplication) getApplication();
+                            DatabaseOperationDao dbManager = globalApplication.getDatabaseOperationDao();
+                            if (dbManager.findUsername(input))
+                                Toast.makeText(MyInfoActivity.this, "修改失败，用户名已被注册，请重新输入", Toast.LENGTH_SHORT).show();
+                            else {
+                                dbManager.updateTable("user_table", "username =  '"+input+"'", "user_id = "+userBean.getId());
+                                userBean.setUsername(editText.getText().toString());
+                                itemGroupName.setText(userBean.getUsername());
+                            }
+                        }
+
                     }
                 });
                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -251,7 +268,9 @@ public class MyInfoActivity extends AppCompatActivity {
             case android.R.id.home:
                 //if (hasChanged) {
                 Intent intent = new Intent();
-                intent.putExtra("userBean", userBean);
+                //intent.putExtra("userBean", userBean);
+                GlobalApplication application = (GlobalApplication) getApplication();
+                application.setUserBean(userBean);
                 setResult(1, intent);
                 //}
                 this.finish();
@@ -266,7 +285,9 @@ public class MyInfoActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             Intent intent = new Intent();
-            intent.putExtra("userBean", userBean);
+            //intent.putExtra("userBean", userBean);
+            GlobalApplication application = (GlobalApplication) getApplication();
+            application.setUserBean(userBean);
             setResult(1, intent);
             this.finish();
             return false;

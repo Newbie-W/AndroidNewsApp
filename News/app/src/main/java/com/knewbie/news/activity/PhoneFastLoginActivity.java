@@ -251,7 +251,8 @@ public class PhoneFastLoginActivity extends AppCompatActivity {
         Log.d("hello", "hello, "+userBean.getUsername());
         Toast.makeText(this, "登录成功", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("userBean", userBean);
+        app.setUserBean(userBean);
+        //intent.putExtra("userBean", userBean);
         startActivity(intent);
         this.finish();
         //UserBean userBean = dbManager.findUser(phoneNum, pwd);

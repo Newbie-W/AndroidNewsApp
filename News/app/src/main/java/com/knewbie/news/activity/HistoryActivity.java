@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.knewbie.news.R;
 import com.knewbie.news.adapter.NewsForDisplayFavoriteAdapter;
+import com.knewbie.news.entity.NewsBean;
 import com.knewbie.news.entity.NewsDisplayItem;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.List;
 
 public class HistoryActivity extends AppCompatActivity {
     private ListView listView;
-    private List<NewsDisplayItem> newsDisplayItemList;
+    private List<NewsBean.ResultBean.DataBean> newsDisplayItemList;
     private NewsForDisplayFavoriteAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     private void refresh() {
         listView = findViewById(R.id.listViewHistory);
-        newsDisplayItemList = initList();
+        //newsDisplayItemList = initList();
         adapter = new NewsForDisplayFavoriteAdapter(newsDisplayItemList, this);
         listView.setAdapter(adapter);
     }
@@ -70,7 +71,7 @@ public class HistoryActivity extends AppCompatActivity {
             item.setAuthor("News官方作者");
             item.setLastEditTime("2020-07-0"+(i+1));
             //item.setCategory("");
-            item.setIntroduction("这是一段引言，这是一段引言，这是一段引言，这是一段引言。这是一段引言，这是一段引言，这是一段引言，这是一段引言。这是一段引言，这是一段引言，这是一段引言，这是一段引言。这是一段引言，这是一段引言，这是一段引言，这是一段引言。");
+            item.setContent("这是一段引言，这是一段引言，这是一段引言，这是一段引言。这是一段引言，这是一段引言，这是一段引言，这是一段引言。这是一段引言，这是一段引言，这是一段引言，这是一段引言。这是一段引言，这是一段引言，这是一段引言，这是一段引言。");
             //item.setContent("引言：...。内容：...。");
             list.add(item);
         }

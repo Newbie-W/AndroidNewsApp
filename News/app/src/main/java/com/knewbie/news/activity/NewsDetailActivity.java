@@ -13,6 +13,7 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -20,11 +21,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.knewbie.news.R;
+import com.knewbie.news.db.DatabaseOperationDao;
+import com.knewbie.news.entity.UserBean;
+import com.knewbie.news.global.GlobalApplication;
 
 public class NewsDetailActivity extends AppCompatActivity {
     private Toolbar toolbarTop, toolbarBottom;
     private WebView webViewNewDetail;
     private String url;
+    private int uid = 0;
+    private String newsId;
     private boolean hasRun=false;
     private String selectorAd[] = {"body > div.top-wrap.gg-item.J-gg-item", "#J_in_list", "body > div.articledown-wrap.gg-item.J-gg-item",
             "body > div.articledown2-wrap.gg-item.J-gg-item", "#news_check", "#J_interest_news", "#J_hot_news", "#J_interest_news > div.three-wrap.gg-item.J-gg-item", "#J_in_list > div:nth-child(1)"};
@@ -41,6 +47,12 @@ public class NewsDetailActivity extends AppCompatActivity {
         toolbarBottom = findViewById(R.id.toolbarBottom_NewsDetail);
         webViewNewDetail = findViewById(R.id.webView_newsDetail);
         url = getIntent().getStringExtra("url");
+        GlobalApplication application = (GlobalApplication) getApplication();
+        UserBean userBean = application.getUserBean();
+        if (userBean!=null) uid = userBean.getId();
+        newsId = getIntent().getStringExtra("newsId");
+        //uid = getIntent().getIntExtra("uid", 0);
+        if (uid == 0) Log.d("hello", "---Error Uid");
         WebSettings webSettings = webViewNewDetail.getSettings();
         final String selector = "body > div.top-wrap.gg-item.J-gg-item";
         webViewNewDetail.setWebViewClient(new WebViewClient(){
@@ -113,6 +125,24 @@ public class NewsDetailActivity extends AppCompatActivity {
                     case R.id.toolbarItem_review:
                         break;
                     case R.id.toolbarItem_collect:
+                        if (uid == 0 || newsId == null || newsId.equals("")) {
+                            Toast.makeText(NewsDetailActivity.this, "收藏失败", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        GlobalApplication application = (GlobalApplication) getApplication();
+                        DatabaseOperationDao dbManager = application.getDatabaseOperationDao();
+                        int favoriteId = dbManager.findNewsFavorite(uid, newsId);
+                        if (favoriteId == -1) {
+                            dbManager.addNewsFavoriteDisplayItem(uid, newsId);
+                            Toast.makeText(NewsDetailActivity.this, "收藏成功！", Toast.LENGTH_SHORT).show();
+                            //dbManager.getNewsFavoriteDisplayItemList();
+                        } else {
+                            Toast.makeText(NewsDetailActivity.this, "您已收藏过，已取消收藏", Toast.LENGTH_SHORT).show();
+                            dbManager.deleteNewsFavoriteDisplayItem(favoriteId);
+                            setResult(RESULT_OK);
+                            //dbManager.getNewsFavoriteDisplayItemList();
+                        }
+
                         break;
                     case R.id.toolbarItem_share:
                         Intent intent = new Intent(Intent.ACTION_SEND);
@@ -137,7 +167,7 @@ public class NewsDetailActivity extends AppCompatActivity {
     private String clearAdJs() {
         String js = "javascript:";
         for (int i=0; i<selectorAd.length; i++) {
-            js += "var adDiv" + i + " = document.getElementById('" + selectorAd[i] + "');" +
+            js = js + "var adDiv" + i + " = document.getElementById('" + selectorAd[i] + "');" +
                     "if (adDiv" + i + " != null)" +
                     "adDiv" + i + ".parentNode.removeChild(adDiv" + i + ");";
         }

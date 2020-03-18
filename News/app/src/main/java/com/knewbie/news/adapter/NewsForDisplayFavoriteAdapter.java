@@ -8,15 +8,15 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.knewbie.news.R;
-import com.knewbie.news.entity.NewsDisplayItem;
+import com.knewbie.news.entity.NewsBean;
 
 import java.util.List;
 
 public class NewsForDisplayFavoriteAdapter extends BaseAdapter {
-    private List<NewsDisplayItem> mItems;
+    private List<NewsBean.ResultBean.DataBean> mItems;
     private LayoutInflater mInflater;
 
-    public NewsForDisplayFavoriteAdapter(List<NewsDisplayItem> mItems, Activity context) {
+    public NewsForDisplayFavoriteAdapter(List<NewsBean.ResultBean.DataBean> mItems, Activity context) {
         this.mItems = mItems;
         mInflater = LayoutInflater.from(context);
     }
@@ -33,8 +33,13 @@ public class NewsForDisplayFavoriteAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return mItems.get(position).getId();
+        return position;
     }
+
+    /*@Override
+    public long getItemId(int position) {
+        return mItems.get(position).getId();
+    }*/
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -42,12 +47,12 @@ public class NewsForDisplayFavoriteAdapter extends BaseAdapter {
         TextView textViewTitle = (TextView)view.findViewById(R.id.textViewTitle_Favorite);
         TextView textViewAuthor = (TextView) view.findViewById(R.id.textViewAuthor_Favorite);
         TextView textViewLastEditTime = (TextView) view.findViewById(R.id.textViewLastEditTime_Favorite);
-        TextView textViewIntroduction = (TextView) view.findViewById(R.id.textViewIntroduction_Favorite);
-        NewsDisplayItem item = mItems.get(position);
+        //TextView textViewIntroduction = (TextView) view.findViewById(R.id.textViewIntroduction_Favorite);
+        NewsBean.ResultBean.DataBean item = mItems.get(position);
         textViewTitle.setText(item.getTitle());
-        textViewAuthor.setText(item.getAuthor());
-        textViewLastEditTime.setText(item.getLastEditTime());
-        textViewIntroduction.setText(item.getIntroduction());
+        textViewAuthor.setText(item.getAuthor_name());
+        textViewLastEditTime.setText(item.getDate());
+        //textViewIntroduction.setText(item.getUrl());
         return view;
     }
 }

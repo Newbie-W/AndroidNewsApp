@@ -214,31 +214,79 @@ public class DatabaseOperationDao {
 
     /*
      * Favorite News
-     *
-    public List<NewsDisplayItem> getNewsFavoriteDisplayItemList() {
+     */
+    public int findNewsFavorite(int uid, String newsId) {
+        Cursor cursor = db.query("favorite_table", null, "user_id = ? and news_id = ?", new String[]{""+uid, newsId}, null, null, null);
+        if (cursor.moveToNext())
+            return cursor.getInt(cursor.getColumnIndex("favorite_id"));
+        return -1;
+    }
+
+    public List<NewsBean.ResultBean.DataBean> getNewsFavoriteList(int uid) {
+        getNewsFavoriteDisplayItemList();
+        List<NewsBean.ResultBean.DataBean> result = new ArrayList<>();
+        //favorite_table (favorite_id, user_id, news_id)
+        // news_table (news_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url, cover_pic2_url, cover_pic3_url)
+        String sql = "select * from news_table where news_id in (select news_id from favorite_table where user_id = ?)";
+        Cursor cursor = db.rawQuery(sql, new String[]{uid+""});
+        //Cursor cursor = db.query("favorite_table", null, null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            //Log.d("hello", "getFavoriteNews---");
+            NewsBean.ResultBean.DataBean item = new NewsBean.ResultBean.DataBean();
+            //item.setId(cursor.getInt(cursor.getColumnIndex("favorite_id")));
+            item.setUniquekey(cursor.getString(cursor.getColumnIndex("news_id")));
+            item.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+            //item.setIntroduction(cursor.getString(cursor.getColumnIndex("digest")));
+            item.setUrl(cursor.getString(cursor.getColumnIndex("content_url")));
+            item.setDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
+            item.setAuthor_name(cursor.getString(cursor.getColumnIndex("release_source")));
+            item.setThumbnail_pic_s(cursor.getString(cursor.getColumnIndex("cover_pic1_url")));
+            item.setThumbnail_pic_s02(cursor.getString(cursor.getColumnIndex("cover_pic2_url")));
+            item.setThumbnail_pic_s03(cursor.getString(cursor.getColumnIndex("cover_pic3_url")));
+            result.add(item);
+        }
+        cursor.close();
+        return result;
+    }
+    public void getNewsFavoriteDisplayItemList() {
+        //favorite_table (favorite_id, user_id, news_id)
+        String sql = "select * from favorite_table ";
+        Cursor cursor = db.rawQuery(sql, null);
+        //Cursor cursor = db.query("favorite_table", null, null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            Log.d("hello", "----"+cursor.getInt(cursor.getColumnIndex("favorite_id"))
+                            + "--"+cursor.getString(cursor.getColumnIndex("news_id")) +
+                    "---"+cursor.getInt(cursor.getColumnIndex("user_id")) );
+        }
+        cursor.close();
+        //return result;
+    }
+    /*public List<NewsDisplayItem> getNewsFavoriteDisplayItemList() {
         List<NewsDisplayItem> result = new ArrayList<>();
         //favorite_table (favorite_id, user_id, news_id)
-        Cursor cursor = db.query("favorite_table", null, null, null, null, null, null);
+        String sql = "select * from news_table inner join favorite_table on ";
+        Cursor cursor = db.rawQuery(sql, null);
+        //Cursor cursor = db.query("favorite_table", null, null, null, null, null, null);
         while (cursor.moveToNext()) {
             NewsDisplayItem item = new NewsDisplayItem();
-            item.setId(cursor.getInt(cursor.getColumnIndex("news_id")));
-            item.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-            item.setIntroduction(cursor.getString(cursor.getColumnIndex("digest")));
-            item.setContent(cursor.getString(cursor.getColumnIndex("content")));
-            item.setLastEditTime(cursor.getString(cursor.getColumnIndex("last_edit_time")));
+            item.setId(cursor.getInt(cursor.getColumnIndex("favorite_id")));
+            //item.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+            //item.setIntroduction(cursor.getString(cursor.getColumnIndex("digest")));
+            //item.setContent(cursor.getString(cursor.getColumnIndex("content")));
+            //item.setLastEditTime(cursor.getString(cursor.getColumnIndex("last_edit_time")));
             //item.setAuthor(cursor.getInt(cursor.getColumnIndex("release_user_id")));
             //item.setPic(cursor.getInt(cursor.getColumnIndex("cover_pic_id")));
             result.add(item);
         }
         cursor.close();
         return result;
-    }
+    }*/
 
-    public void addNewsFavoriteDisplayItem(NewsDisplayItem item) {
+    public void addNewsFavoriteDisplayItem(int uid, String newsId) {
         db.beginTransaction();
         try {
             //favorite_table (favorite_id, user_id, news_id)
-            db.execSQL("insert into favorite_table values(null, ?, ?)", new Object[]{item.getTitle(), item.getCategory(), item.getIntroduction(), item.getContent(), item.getLastEditTime(), "Author", R.drawable.logo_news_fill_2});
+            db.execSQL("insert into favorite_table values(null, ?, ?)", new Object[]{uid, newsId});
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -246,7 +294,8 @@ public class DatabaseOperationDao {
     }
 
     public void deleteNewsFavoriteDisplayItem(long id) {
-        String sql = "delete from favorite_table where news_id = "+id;
+        String sql = "delete from favorite_table where favorite_id = "+id;
+        Log.d("hello", "deleteNewsFavorite---");
         db.beginTransaction();
         try {
             db.execSQL(sql);
@@ -254,7 +303,7 @@ public class DatabaseOperationDao {
         }finally {
             db.endTransaction();
         }
-    }*/
+    }
 
     /*
      * History

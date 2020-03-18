@@ -79,7 +79,8 @@ public class LoginActivity extends AppCompatActivity {
             this.finish();  //关闭原来界面
             Toast.makeText(this, "登录成功", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("userBean", userBean);      //UserBean需要序列化
+            //intent.putExtra("userBean", userBean);      //UserBean需要序列化
+            app.setUserBean(userBean);
             startActivity(intent);
         } else {
             Toast.makeText(this, "登录失败，用户名或密码不存在，提示：测试用户0", Toast.LENGTH_LONG).show();

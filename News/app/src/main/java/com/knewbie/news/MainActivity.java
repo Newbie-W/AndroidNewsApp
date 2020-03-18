@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +35,7 @@ import com.knewbie.news.entity.UserBean;
 import com.knewbie.news.fragment.HomeFragment;
 import com.knewbie.news.fragment.MyFragment;
 import com.knewbie.news.fragment.VideoFragment;
+import com.knewbie.news.global.GlobalApplication;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -133,7 +133,9 @@ public class MainActivity extends AppCompatActivity
         appBarIcon = headerView.findViewById(R.id.imageViewAppbarIcon);
         textViewUsername = headerView.findViewById(R.id.textViewAppbarUsername);
         textViewSignature = headerView.findViewById(R.id.textViewAppbarSignature);
-        user = (UserBean) getIntent().getSerializableExtra("userBean");
+        GlobalApplication application = (GlobalApplication) getApplication();
+        user = application.getUserBean();
+        //user = (UserBean) getIntent().getSerializableExtra("userBean");
         //Toast.makeText(this, "登录成功", Toast.LENGTH_LONG).show();
         textViewUsername.setText(user.getUsername());
         if (user.getSignature()!= null)
@@ -145,7 +147,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, MyInfoActivity.class);
-                intent.putExtra("userBean", user);
+                //intent.putExtra("userBean", user);
                 startActivityForResult(intent, REQUESTCODE_SELFINFO);
             }
         });
@@ -165,6 +167,23 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        MenuItem item = menu.findItem(R.id.toolbarItem_search);
+        SearchView searchView = (SearchView) item.getActionView();
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Toast.makeText(MainActivity.this, query, Toast.LENGTH_LONG).show();
+                //Log.d("hello", "searchView"+query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         return true;
     }
 
@@ -175,7 +194,7 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
-        if (id == R.id.toolbarItem_action_settings) {
+        /*if (id == R.id.toolbarItem_search) {
             SearchView searchView = findViewById(R.id.toolbarItem_search);
             SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -193,7 +212,8 @@ public class MainActivity extends AppCompatActivity
                 }
             });
             return true;
-        }else if (id == R.id.toolbarItem_action_settings) {
+        }else */
+        if (id == R.id.toolbarItem_action_settings) {
             return true;
         }
         else if (id == R.id.toolbarItem_addNewsItem) {
@@ -262,7 +282,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case REQUESTCODE_SELFINFO:
                 if (resultCode == 1) {
-                    user = (UserBean) data.getSerializableExtra("userBean");
+                    GlobalApplication application = (GlobalApplication) getApplication();
+                    user = application.getUserBean();
+                    //user = (UserBean) data.getSerializableExtra("userBean");
                     //Log.d("hello", "finally userBean---"+user.getUsername()+","+user.getSignature());
                     textViewUsername.setText(user.getUsername());
                     if (user.getSignature()!= null) textViewSignature.setText(user.getSignature());
@@ -300,4 +322,7 @@ public class MainActivity extends AppCompatActivity
 
         return options;
     }
+    /*public UserBean getUser() {
+        return user;
+    }*/
 }

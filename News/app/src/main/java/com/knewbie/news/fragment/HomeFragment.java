@@ -207,6 +207,9 @@ public class HomeFragment extends Fragment {
                 }).start();
                 Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
                 intent.putExtra("url", url);
+                intent.putExtra("newsId", newsBeanList.get(position).getUniquekey());
+                //final UserBean userBean = getActivity().;
+                //intent.putExtra("uid", ((MainActivity)getActivity()).getUser().getId());
                 Log.d("hello, url = ", url+" 。");
                 startActivity(intent);
             }

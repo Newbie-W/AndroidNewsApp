@@ -4,17 +4,16 @@ public class NewsDisplayItem {
     private int id;
     private String title;
     private String category;
-    private String introduction;
+    //private String introduction;
     private String content;
     private String author;
     private String lastEditTime;
     //private String pic;
 
-    public NewsDisplayItem(int id, String title, String category, String introduction, String content, String author, String lastEditTime) {
+    public NewsDisplayItem(int id, String title, String category, String content, String author, String lastEditTime) {
         this.id = id;
         this.title = title;
         this.category = category;
-        this.introduction = introduction;
         this.content = content;
         this.author = author;
         this.lastEditTime = lastEditTime;
@@ -23,10 +22,9 @@ public class NewsDisplayItem {
     public NewsDisplayItem() {
     }
 
-    public NewsDisplayItem(String title, String category, String introduction, String content, String author, String lastEditTime) {
+    public NewsDisplayItem(String title, String category, String content, String author, String lastEditTime) {
         this.title = title;
         this.category = category;
-        this.introduction = introduction;
         this.content = content;
         this.author = author;
         this.lastEditTime = lastEditTime;
@@ -56,13 +54,13 @@ public class NewsDisplayItem {
         this.category = category;
     }
 
-    public String getIntroduction() {
+    /*public String getIntroduction() {
         return introduction;
     }
 
     public void setIntroduction(String introduction) {
         this.introduction = introduction;
-    }
+    }*/
 
     public String getContent() {
         return content;
@@ -102,7 +100,7 @@ public class NewsDisplayItem {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", category='" + category + '\'' +
-                ", introduction='" + introduction + '\'' +
+                //", introduction='" + introduction + '\'' +
                 ", content='" + content + '\'' +
                 ", author='" + author + '\'' +
                 ", lastEditTime='" + lastEditTime + '\'' +

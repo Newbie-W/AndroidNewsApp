@@ -44,9 +44,9 @@ public class NewsForDisplayFavoriteAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = mInflater.inflate(R.layout.listview_news_for_display_favorite_item, null);
-        TextView textViewTitle = (TextView)view.findViewById(R.id.textViewTitle_Favorite);
-        TextView textViewAuthor = (TextView) view.findViewById(R.id.textViewAuthor_Favorite);
-        TextView textViewLastEditTime = (TextView) view.findViewById(R.id.textViewLastEditTime_Favorite);
+        TextView textViewTitle = (TextView)view.findViewById(R.id.textViewTitle);
+        TextView textViewAuthor = (TextView) view.findViewById(R.id.textViewAuthor);
+        TextView textViewLastEditTime = (TextView) view.findViewById(R.id.textViewLastEditTime);
         //TextView textViewIntroduction = (TextView) view.findViewById(R.id.textViewIntroduction_Favorite);
         NewsBean.ResultBean.DataBean item = mItems.get(position);
         textViewTitle.setText(item.getTitle());

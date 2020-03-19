@@ -22,6 +22,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.knewbie.news.R;
 import com.knewbie.news.db.DatabaseOperationDao;
+import com.knewbie.news.entity.NewsBean;
 import com.knewbie.news.entity.UserBean;
 import com.knewbie.news.global.GlobalApplication;
 
@@ -46,13 +47,34 @@ public class NewsDetailActivity extends AppCompatActivity {
         toolbarTop = findViewById(R.id.toolbarTop_NewsDetail);
         toolbarBottom = findViewById(R.id.toolbarBottom_NewsDetail);
         webViewNewDetail = findViewById(R.id.webView_newsDetail);
-        url = getIntent().getStringExtra("url");
+        //url = getIntent().getStringExtra("url");
         GlobalApplication application = (GlobalApplication) getApplication();
         UserBean userBean = application.getUserBean();
         if (userBean!=null) uid = userBean.getId();
-        newsId = getIntent().getStringExtra("newsId");
-        //uid = getIntent().getIntExtra("uid", 0);
         if (uid == 0) Log.d("hello", "---Error Uid");
+        NewsBean.ResultBean.DataBean dataBean = (NewsBean.ResultBean.DataBean) getIntent().getSerializableExtra("dataBean");
+        newsId = dataBean.getUniquekey();
+        url = dataBean.getUrl();
+        //uid = getIntent().getIntExtra("uid", 0);
+        DatabaseOperationDao dbManager = application.getDatabaseOperationDao();
+        int historyId = dbManager.findNewsHistory(uid, newsId);
+        //int len = dbManager.getNewsHistoryList(uid).size();
+        if (historyId == -1) {
+            dbManager.addNewsHistoryDisplayItem(uid, newsId);
+            if (!dbManager.findNews(newsId))
+                dbManager.addNewsDataBean(dataBean);
+            //Toast.makeText(this, "加入浏览历史", Toast.LENGTH_SHORT).show();
+        } else if (historyId == dbManager.getTheLast("history_table", "history_id")) {
+
+        } else {        //两种选择，增加历史阅读时间项，并修改时间 或 增删项
+            dbManager.deleteNewsHistoryDisplayItem(historyId);
+            dbManager.addNewsHistoryDisplayItem(uid, newsId);
+            setResult(RESULT_OK);
+            //dbManager.deleteNewsDataBean(newsId);
+            //dbManager.addNewsDataBean(dataBean);
+            //Toast.makeText(this, historyId+"删除后，加入浏览历史", Toast.LENGTH_SHORT).show();
+        }
+
         WebSettings webSettings = webViewNewDetail.getSettings();
         final String selector = "body > div.top-wrap.gg-item.J-gg-item";
         webViewNewDetail.setWebViewClient(new WebViewClient(){

@@ -1,5 +1,7 @@
 package com.knewbie.news.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -28,6 +30,8 @@ public class FavoriteActivity extends AppCompatActivity {
     private NewsForDisplayFavoriteAdapter adapter;
     private UserBean userBean;
     private final int REQUESTCODE_NEWSDETAIL = 1;
+    private GlobalApplication app;
+    private DatabaseOperationDao dbManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +46,15 @@ public class FavoriteActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Toast.makeText(FavoriteActivity.this, "ItemClick:"+position+",id"+id, Toast.LENGTH_SHORT).show();
-                GlobalApplication app = (GlobalApplication) getApplication();
-                DatabaseOperationDao dbManager = app.getDatabaseOperationDao();
+                //GlobalApplication app = (GlobalApplication) getApplication();
+                //DatabaseOperationDao dbManager = app.getDatabaseOperationDao();
                 NewsBean.ResultBean.DataBean dataBean = newsDisplayItemList.get(position);
-                String url = dataBean.getUrl();
+                //String url = dataBean.getUrl();
                 String newsId = dataBean.getUniquekey();
                 Intent intent = new Intent(FavoriteActivity.this, NewsDetailActivity.class);
-                intent.putExtra("url", url);
-                intent.putExtra("newsId", newsId);
+                //intent.putExtra("url", url);
+                //intent.putExtra("newsId", newsId);
+                intent.putExtra("dataBean", dataBean);
                 startActivityForResult(intent, REQUESTCODE_NEWSDETAIL);
             }
         });
@@ -66,8 +71,30 @@ public class FavoriteActivity extends AppCompatActivity {
         });
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(FavoriteActivity.this, "ItemLongClick:"+position+",id"+id, Toast.LENGTH_SHORT).show();
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                //Toast.makeText(FavoriteActivity.this, "ItemLongClick:"+position+",id"+id, Toast.LENGTH_SHORT).show();
+                if (userBean == null) {
+                    app = (GlobalApplication) getApplication();
+                    dbManager = app.getDatabaseOperationDao();
+                    userBean = app.getUserBean();
+                }
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(FavoriteActivity.this);
+                dialogBuilder.setTitle("提示");
+                dialogBuilder.setMessage("确认删除该条记录吗？");
+                dialogBuilder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dbManager.deleteNewsHistoryDisplayItem(dbManager.findNewsHistory(userBean.getId(), newsDisplayItemList.get(position).getUniquekey()));
+                        refresh();
+                    }
+                });
+                dialogBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                dialogBuilder.show();
                 return false;
             }
         });
@@ -75,12 +102,15 @@ public class FavoriteActivity extends AppCompatActivity {
 
     private void refresh() {
         listView = findViewById(R.id.listViewFavorite);
-        GlobalApplication app = (GlobalApplication) getApplication();
-        DatabaseOperationDao dbManager = app.getDatabaseOperationDao();
-        userBean = app.getUserBean();
+        if (userBean == null) {
+            app = (GlobalApplication) getApplication();
+            dbManager = app.getDatabaseOperationDao();
+            userBean = app.getUserBean();
+        }
         newsDisplayItemList = dbManager.getNewsFavoriteList(userBean.getId());
         adapter = new NewsForDisplayFavoriteAdapter(newsDisplayItemList, this);
         listView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     @Override

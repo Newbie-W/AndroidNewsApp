@@ -1,5 +1,6 @@
 package com.knewbie.news.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class NewsBean {
@@ -63,7 +64,7 @@ public class NewsBean {
             this.data = data;
         }
 
-        public static class DataBean {
+        public static class DataBean implements Serializable {
             /**
              * uniquekey : 38cdded73c6411d4a85eb9db9f3525a8
              * title : 开心一刻: 亲戚吃饭催婚时, 俺还在一副独立女性的样子…

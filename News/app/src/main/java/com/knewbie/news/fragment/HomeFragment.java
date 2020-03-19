@@ -138,7 +138,8 @@ public class HomeFragment extends Fragment {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                int start = (page-1) * len;
+                                getNewsDataFromInternet();
+                                /*int start = (page-1) * len;
                                 NewsBean newsBean = new NewsBean();
                                 //Log.d("hello", "swipeRefresh-----2");
                                 GlobalApplication globalApplication = (GlobalApplication) getActivity().getApplication();
@@ -150,7 +151,7 @@ public class HomeFragment extends Fragment {
                                 Message message = newsMessageHandler.obtainMessage();
                                 message.what = GET_NEWS_FROM_INTERNET;
                                 message.obj = newsBean;
-                                newsMessageHandler.sendMessage(message);
+                                newsMessageHandler.sendMessage(message);*/
                                 //Log.d("hello", "swipeRefresh-----4sendMessage");
                             }
                         }).start();
@@ -192,25 +193,32 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemClick(View v, int position) {
                 //Toast.makeText(getActivity(), "点击了 当前位置"+position+",  对应id"+newsForReadItemList.get(position).getId(), Toast.LENGTH_SHORT).show();
-                String url = newsBeanList.get(position).getUrl();
-                final String uniquekey = newsBeanList.get(position).getUniquekey();
+                //String url = newsBeanList.get(position).getUrl();
+                //final String uniquekey = newsBeanList.get(position).getUniquekey();
                 final NewsBean.ResultBean.DataBean dataBean = newsBeanList.get(position);
                 //点击了一条新闻，加到数据库（news_table）中，后期会改为history_table中
-                new Thread(new Runnable() {
+                /*new Thread(new Runnable() {
                     @Override
                     public void run() {
                         GlobalApplication app = (GlobalApplication) getActivity().getApplication();
                         DatabaseOperationDao dbManager = app.getDatabaseOperationDao();
-                        if (!dbManager.findNews(uniquekey))
+                        int uid = app.getUserBean().getId();
+                        int historyId = dbManager.findNewsHistory(uid, uniquekey);
+                        if (historyId == -1)
                             dbManager.addNewsDataBean(dataBean);
+                        else {
+                            dbManager.deleteNewsDataBean(uniquekey);
+                            dbManager.addNewsDataBean(dataBean);
+                        }
                     }
-                }).start();
+                }).start();*/
                 Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-                intent.putExtra("url", url);
-                intent.putExtra("newsId", newsBeanList.get(position).getUniquekey());
+                //intent.putExtra("url", url);
+                //intent.putExtra("newsId", newsBeanList.get(position).getUniquekey());
+                intent.putExtra("dataBean", dataBean);
                 //final UserBean userBean = getActivity().;
                 //intent.putExtra("uid", ((MainActivity)getActivity()).getUser().getId());
-                Log.d("hello, url = ", url+" 。");
+                //Log.d("hello, url = ", url+" 。");
                 startActivity(intent);
             }
         });
@@ -268,9 +276,9 @@ public class HomeFragment extends Fragment {
                         NewsBean newsBean = new Gson().fromJson(s, NewsBean.class);
                         //Log.d("hello", "getNewsDataFromInternet------onPostExecute,newsBean="+newsBean);
                         Log.d("hello", "getNewsDataFromInternet------onPostExecute,ErrorCode"+newsBean.getError_code());
-                        if (10012 == newsBean.getError_code() || 10006 == newsBean.getError_code()) {
+                        if (10012 == newsBean.getError_code() || 10006 == newsBean.getError_code() || 00006 == newsBean.getError_code()) {
                             //访问次数上限，将从数据库加载数据
-                            Log.d("hello", "10012， 10006");
+                            Log.d("hello", "10012， 10006, 00006");
                             GlobalApplication globalApplication = (GlobalApplication) getActivity().getApplication();
                             DatabaseOperationDao dbManager = globalApplication.getDatabaseOperationDao();
                             List<NewsBean.ResultBean.DataBean> dataBeanList = dbManager.getNewsDataBeanList();

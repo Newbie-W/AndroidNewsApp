@@ -122,12 +122,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
 
         //history_table (history_id, user_id, news_id)
-        sql = "insert into history_table(user_id, news_id) values(1, 0)";
+        /*sql = "insert into history_table(user_id, news_id) values(1, 0)";
         db.execSQL(sql);
         sql = "insert into history_table(user_id, news_id) values(1, 1)";
         db.execSQL(sql);
         sql = "insert into history_table(user_id, news_id) values(1, 2)";
-        db.execSQL(sql);
+        db.execSQL(sql);*/
 
         //tip_table (tip_id, user_id, news_id)
     }

@@ -6,7 +6,7 @@
     android:paddingBottom="15dp">
 
     <TextView
-        android:id="@+id/textViewTitle_Favorite"
+        android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -17,21 +17,21 @@
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/textViewAuthor_Favorite"
+        android:id="@+id/textViewAuthor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textViewTitle_Favorite"
+        android:layout_below="@id/textViewTitle"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="10dp"
         android:text="News官方作者"
         android:textSize="12sp" />
 
     <TextView
-        android:id="@+id/textViewLastEditTime_Favorite"
+        android:id="@+id/textViewLastEditTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textViewTitle_Favorite"
-        android:layout_alignTop="@id/textViewAuthor_Favorite"
+        android:layout_below="@id/textViewTitle"
+        android:layout_alignTop="@id/textViewAuthor"
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
         android:text="2020-01-01"

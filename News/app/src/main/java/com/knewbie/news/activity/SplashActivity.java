@@ -24,6 +24,7 @@ public class SplashActivity extends AppCompatActivity {
                 Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(intent);
                 has_skip = true;
+                finish();
             }
         });
         Handler handler = new Handler();
@@ -33,6 +34,7 @@ public class SplashActivity extends AppCompatActivity {
                 if (!has_skip) {
                     Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         }, 3000);

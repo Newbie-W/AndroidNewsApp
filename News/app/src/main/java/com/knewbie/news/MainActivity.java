@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +30,7 @@ import com.knewbie.news.activity.HistoryActivity;
 import com.knewbie.news.activity.InformationActivity;
 import com.knewbie.news.activity.MyInfoActivity;
 import com.knewbie.news.adapter.ViewPagerAdapter;
+import com.knewbie.news.db.DatabaseOperationDao;
 import com.knewbie.news.entity.UserBean;
 import com.knewbie.news.fragment.HomeFragment;
 import com.knewbie.news.fragment.MyFragment;
@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity
     private UserBean user;
     private CircleImageView appBarIcon;
     private TextView textViewUsername, textViewSignature;
+    private BottomNavigationView bottomNavigationView;
     private final int REQUESTCODE_ADDNEWS = 1;
     private final int REQUESTCODE_SELFINFO = 2;
 
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity
         if (!ImageLoader.getInstance().isInited())
             ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(this));
 
-        final BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavView);
+        bottomNavigationView = findViewById(R.id.bottomNavView);
         bottomNavigationView.getMenu().getItem(1).setChecked(true);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -174,17 +175,35 @@ public class MainActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(MainActivity.this, query, Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this, query, Toast.LENGTH_LONG).show();
+                searchNews(query);
                 //Log.d("hello", "searchView"+query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                searchNews(newText);
                 return false;
             }
         });
         return true;
+    }
+
+    private void searchNews(String query) {
+        GlobalApplication application = (GlobalApplication) getApplication();
+        DatabaseOperationDao dbManager = application.getDatabaseOperationDao();
+		bottomNavigationView.getMenu().getItem(1).setChecked(true);
+		viewPager.setCurrentItem(1);
+        Fragment currentFragment = viewPagerAdapter.getInstantFragment();
+        if (currentFragment instanceof HomeFragment) {
+            if (query==null || query.trim().isEmpty())
+                ((HomeFragment) currentFragment).newsBeanList = dbManager.getNewsDataBeanList();
+            else {
+                ((HomeFragment) currentFragment).newsBeanList = dbManager.searchNewsDataBeanList(query);
+            }
+            ((HomeFragment) currentFragment).refresh();
+        }
     }
 
     @Override
@@ -225,7 +244,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    // @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -309,7 +328,7 @@ public class MainActivity extends AppCompatActivity
 
     public static DisplayImageOptions getOption() {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                // .showImageOnLoading(R.drawable.logo_news_fill_2)    // 设置图片下载期间显示的图片
+                .showImageOnLoading(R.mipmap.ic_launcher)    // 设置图片下载期间显示的图片
                 .showImageForEmptyUri(R.mipmap.ic_launcher)         // 设置图片Uri为空或是错误的时候显示的图片
                 .showImageOnFail(R.mipmap.ic_launcher)              // 设置图片加载或解码过程中发生错误显示的图片
                 .resetViewBeforeLoading(true)                       // default 设置图片在加载前是否重置、复位

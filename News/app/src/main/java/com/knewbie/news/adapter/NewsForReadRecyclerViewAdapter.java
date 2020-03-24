@@ -1,6 +1,7 @@
 package com.knewbie.news.adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +12,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.knewbie.news.R;
 import com.knewbie.news.entity.NewsBean;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 import java.util.List;
 
@@ -27,6 +31,8 @@ public class NewsForReadRecyclerViewAdapter extends RecyclerView.Adapter<NewsFor
     private OnItemClickListener mOnItemClickListener = null;
     //注意类OnItemClickListener，用的不是AdapterView.OnItemClickListener
     private OnItemLongClickListener mOnItemLongClickListener= null;
+    private Context context;
+    private RequestOptions options;
     private static final int ONE_PIC = 0;
     private static final int TWO_PIC = 1;
     private static final int THREE_PIC = 2;
@@ -34,8 +40,9 @@ public class NewsForReadRecyclerViewAdapter extends RecyclerView.Adapter<NewsFor
     public NewsForReadRecyclerViewAdapter(Activity context, List<NewsBean.ResultBean.DataBean> mItems) {     //NewsForReadItem
         this.mItems = mItems;
         mLayoutInflater = LayoutInflater.from(context);
-        if(!ImageLoader.getInstance().isInited())
-            ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(context));
+        this.context = context;
+        /*if(!ImageLoader.getInstance().isInited())
+            ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(context));*/
     }
 
     public interface OnItemClickListener {      //回调接口
@@ -157,13 +164,13 @@ public class NewsForReadRecyclerViewAdapter extends RecyclerView.Adapter<NewsFor
                 .showImageForEmptyUri(R.mipmap.ic_launcher)         // 设置图片Uri为空或是错误的时候显示的图片
                 .showImageOnFail(R.mipmap.ic_launcher)              // 设置图片加载或解码过程中发生错误显示的图片
                 .resetViewBeforeLoading(true)                       // default 设置图片在加载前是否重置、复位
-                .delayBeforeLoading(1000)                           // 下载前的延迟时间
+                .delayBeforeLoading(100)                            // 下载前的延迟时间
                 .cacheInMemory(true)                                // default  设置下载的图片是否缓存在内存中
                 .cacheOnDisk(true)                                  // default  设置下载的图片是否缓存在SD卡中
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)   // default 设置图片以如何的编码方式显示
                 .bitmapConfig(Bitmap.Config.RGB_565)                // default 设置图片的解码类型
+                .displayer(new RoundedBitmapDisplayer(20))  // 是否设置为圆角，弧度为多少
                 .build();
-
         return options;
     }
 
@@ -216,12 +223,40 @@ public class NewsForReadRecyclerViewAdapter extends RecyclerView.Adapter<NewsFor
         //holder.textViewReadAmount.setText(String.valueOf(item.getReadAmount()));
         //holder.textViewReviewAmount.setText(String.valueOf(item.getReviewAmount()));
         holder.textViewLastEditTime.setText(item.getDate());
-        ImageLoader.getInstance().displayImage(item.getThumbnail_pic_s(), holder.imageViewNewsPic, getOption());
+        if (options == null) {
+            options = new RequestOptions()
+                    .placeholder(R.drawable.logo_news_fill_2)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .error(R.drawable.logo_news_fill_2)
+                    .bitmapTransform(new RoundedCorners(24))
+                    .dontAnimate();
+        }
+        Glide.with(context)
+                .load(item.getThumbnail_pic_s())
+                .apply(options)
+                .into(holder.imageViewNewsPic);
+                //.
+        Glide.with(context)
+                .load(item.getThumbnail_pic_s02())
+                .apply(options)
+                .into(holder.imageViewNewsPicSecond);
+        Glide.with(context)
+                .load(item.getThumbnail_pic_s03())
+                .apply(options)
+                .into(holder.imageViewNewsPicThird);
+        /*ImageLoader.getInstance().displayImage(item.getThumbnail_pic_s(), holder.imageViewNewsPic, getOption());
         ImageLoader.getInstance().displayImage(item.getThumbnail_pic_s02(), holder.imageViewNewsPicSecond, getOption());
-        ImageLoader.getInstance().displayImage(item.getThumbnail_pic_s03(), holder.imageViewNewsPicThird, getOption());
+        ImageLoader.getInstance().displayImage(item.getThumbnail_pic_s03(), holder.imageViewNewsPicThird, getOption());*/
     }
 
     private void loadTwoPicListItem(final NewsForReadItemViewHolder holder, final int position) {
+        if (options == null) {
+            options = new RequestOptions()
+                    .placeholder(R.drawable.logo_news_fill_2)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .error(R.drawable.logo_news_fill_2)
+                    .dontAnimate();
+        }
         NewsBean.ResultBean.DataBean item = mItems.get(position);
         holder.textViewTitle.setText(item.getTitle());
         holder.textViewAuthor.setText(item.getAuthor_name());
@@ -230,10 +265,21 @@ public class NewsForReadRecyclerViewAdapter extends RecyclerView.Adapter<NewsFor
         //holder.textViewReadAmount.setText(String.valueOf(item.getReadAmount()));
         //holder.textViewReviewAmount.setText(String.valueOf(item.getReviewAmount()));
         holder.textViewLastEditTime.setText(item.getDate());
-        ImageLoader.getInstance().displayImage(item.getThumbnail_pic_s(), holder.imageViewNewsPic, getOption());
+        Glide.with(context)
+                .load(item.getThumbnail_pic_s())
+                .apply(options)
+                .into(holder.imageViewNewsPic);
+        //ImageLoader.getInstance().displayImage(item.getThumbnail_pic_s(), holder.imageViewNewsPic, getOption());
     }
 
     private void loadOnePicListItem(final NewsForReadItemViewHolder holder, final int position) {
+        if (options == null) {
+            options = new RequestOptions()
+                    .placeholder(R.drawable.logo_news_fill_2)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .error(R.drawable.logo_news_fill_2)
+                    .dontAnimate();
+        }
         NewsBean.ResultBean.DataBean item = mItems.get(position);
         holder.textViewTitle.setText(item.getTitle());
         //Log.d("helloFragment", ""+item.getTitle());
@@ -243,7 +289,11 @@ public class NewsForReadRecyclerViewAdapter extends RecyclerView.Adapter<NewsFor
         //holder.textViewReadAmount.setText(String.valueOf(item.getReadAmount()));
         //holder.textViewReviewAmount.setText(String.valueOf(item.getReviewAmount()));
         holder.textViewLastEditTime.setText(item.getDate());
-        ImageLoader.getInstance().displayImage(item.getThumbnail_pic_s(), holder.imageViewNewsPic, getOption());
+        Glide.with(context)
+                .load(item.getThumbnail_pic_s())
+                .apply(options)
+                .into(holder.imageViewNewsPic);
+        //ImageLoader.getInstance().displayImage(item.getThumbnail_pic_s(), holder.imageViewNewsPic, getOption());
         
     }
 

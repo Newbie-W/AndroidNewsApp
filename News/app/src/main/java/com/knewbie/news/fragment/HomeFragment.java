@@ -54,7 +54,7 @@ public class HomeFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private FloatingActionButton fab;
     //private SearchView searchView;
-    private List<NewsBean.ResultBean.DataBean> newsBeanList;
+    public List<NewsBean.ResultBean.DataBean> newsBeanList;
     private final int GET_NEWS_FROM_INTERNET = 0;
     private final int GET_NEWS_FROM_DB = 1;
     private int page = 0;
@@ -107,6 +107,7 @@ public class HomeFragment extends Fragment {
     }
 	
     private void initView() {
+        mRecyclerView = mRootView.findViewById(R.id.recyclerViewHome);
         /*searchView = mRootView.findViewById(R.id.home_searchView);
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
@@ -173,7 +174,6 @@ public class HomeFragment extends Fragment {
     }
 
     public void refresh() {
-        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recyclerViewHome);
         //Log.d("helloworld", "FragmentOnActivityResult");
         /*
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recyclerViewHome);
@@ -257,7 +257,7 @@ public class HomeFragment extends Fragment {
                         return json;
                     } else {
                         Log.d("hello", "getNewsDataFromInternet------else,非200 "+responseCode);
-                        return "今日访问次数已达上限";
+                        return "访问出错";
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -273,22 +273,42 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void run() {
                         Log.d("hello", "getNewsDataFromInternet------onPostExecute,s="+s+"。");
-                        NewsBean newsBean = new Gson().fromJson(s, NewsBean.class);
-                        //Log.d("hello", "getNewsDataFromInternet------onPostExecute,newsBean="+newsBean);
-                        Log.d("hello", "getNewsDataFromInternet------onPostExecute,ErrorCode"+newsBean.getError_code());
-                        if (10012 == newsBean.getError_code() || 10006 == newsBean.getError_code() || 00006 == newsBean.getError_code()) {
-                            //访问次数上限，将从数据库加载数据
+                        GlobalApplication globalApplication = (GlobalApplication) getActivity().getApplication();
+                        DatabaseOperationDao dbManager = globalApplication.getDatabaseOperationDao();
+                        NewsBean newsBean;
+                        if (s.equals("00006")) {
+                            newsBean = new NewsBean();
+                            //Toast.makeText(getActivity(), "获取新闻已到上限，获取数据库缓存新闻中...", Toast.LENGTH_LONG).show();
                             Log.d("hello", "10012， 10006, 00006");
-                            GlobalApplication globalApplication = (GlobalApplication) getActivity().getApplication();
-                            DatabaseOperationDao dbManager = globalApplication.getDatabaseOperationDao();
-                            List<NewsBean.ResultBean.DataBean> dataBeanList = dbManager.getNewsDataBeanList();
+                            newsBeanList = dbManager.getNewsDataBeanList();
                             newsBean.setResult(new NewsBean.ResultBean());
-                            newsBean.getResult().setData(dataBeanList);
-                        }/* else {
-                            GlobalApplication globalApplication = (GlobalApplication) getActivity().getApplication();
-                            DatabaseOperationDao dbManager = globalApplication.getDatabaseOperationDao();
-                            NewsBean.ResultBean.DataBean dataBean = newsBean.getResult().getData().get(i);
-                        }*/
+                            newsBean.getResult().setData(newsBeanList);
+                        } else {
+                            newsBean = new Gson().fromJson(s, NewsBean.class);
+                            //Log.d("hello", "getNewsDataFromInternet------onPostExecute,newsBean="+newsBean);
+                            Log.d("hello", "getNewsDataFromInternet------onPostExecute,ErrorCode"+newsBean.getError_code());
+                            if (10012 == newsBean.getError_code() || 10006 == newsBean.getError_code() || 6 == newsBean.getError_code()) {
+                                //访问次数上限，将从数据库加载数据
+                                //Toast.makeText(getActivity(), "获取新闻已到上限，获取数据库缓存新闻中...", Toast.LENGTH_LONG).show();
+                                Log.d("hello", "10012， 10006, 00006");
+                                newsBeanList = dbManager.getNewsDataBeanList();
+                                newsBean.setResult(new NewsBean.ResultBean());
+                                newsBean.getResult().setData(newsBeanList);
+
+                            } else {
+                                newsBeanList = newsBean.getResult().getData();
+                                for (int i=0; i<newsBeanList.size(); i++) {
+                                    NewsBean.ResultBean.DataBean dataBean = newsBeanList.get(i);
+                                    if (!dbManager.findNews(dataBean.getUniquekey())) {
+                                        dbManager.addNewsDataBean(dataBean);
+                                        Log.d("hello", "addNews");
+                                    }
+                                    //Log.d("hello", ""+dataBean.getUniquekey());
+                                }
+                                //NewsBean.ResultBean.DataBean dataBean = newsBean.getResult().getData().get(i);
+                            }
+                        }
+                        /**/
                         Message message = newsMessageHandler.obtainMessage();
                         message.what = GET_NEWS_FROM_INTERNET;
                         message.obj = newsBean;

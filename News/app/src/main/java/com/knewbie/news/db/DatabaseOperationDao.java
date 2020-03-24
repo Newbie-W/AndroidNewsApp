@@ -60,7 +60,8 @@ public class DatabaseOperationDao {
             userBean.setPhone(cursor.getString(cursor.getColumnIndex("phone")));
             userBean.setEmailAd(cursor.getString(cursor.getColumnIndex("email_address")));
             userBean.setSignature(cursor.getString(cursor.getColumnIndex("signature")));
-            if (userBean == null) userBean.setAvatar("drawable://"+R.drawable.ic_appbar_user);
+            //if (userBean == null) userBean.setAvatar("drawable://"+R.drawable.ic_appbar_user);
+            if (userBean == null) userBean.setAvatar(""+R.drawable.ic_appbar_user);
             else userBean.setAvatar(cursor.getString(cursor.getColumnIndex("pic")));
             cursor.close();
         } else return null; //此种情况，用户名或密码不存在
@@ -80,7 +81,7 @@ public class DatabaseOperationDao {
             userBean.setPhone(cursor.getString(cursor.getColumnIndex("phone")));
             userBean.setEmailAd(cursor.getString(cursor.getColumnIndex("email_address")));
             userBean.setSignature(cursor.getString(cursor.getColumnIndex("signature")));
-            if (userBean == null) userBean.setAvatar("drawable://"+R.drawable.ic_appbar_user);
+            if (userBean == null) userBean.setAvatar(""+R.drawable.ic_appbar_user);
             else userBean.setAvatar(cursor.getString(cursor.getColumnIndex("pic")));
             cursor.close();
         } else return null; //此种情况，用户名或密码不存在
@@ -101,7 +102,7 @@ public class DatabaseOperationDao {
             item.setEmailAd(cursor.getString(cursor.getColumnIndex("email_address")));
             item.setSignature(cursor.getString(cursor.getColumnIndex("signature")));
             //item.setAvatar(R.drawable.ic_appbar_user);
-            if (item == null) item.setAvatar("drawable://"+R.drawable.ic_appbar_user);
+            if (item == null) item.setAvatar(""+R.drawable.ic_appbar_user);
             else item.setAvatar(cursor.getString(cursor.getColumnIndex("pic")));
             result.add(item);
         }
@@ -113,7 +114,7 @@ public class DatabaseOperationDao {
         db.beginTransaction();
         try {
             //user_table(user_id, username, password, phone, email_address, signature, is_auth, pic)
-            db.execSQL("insert into user_table values(null, ?, ?, ?, ?, ?, 0, ?)", new Object[]{item.getUsername(), item.getPassword(), item.getPhone(), item.getEmailAd(), item.getSignature(), "drawable://"+R.drawable.ic_appbar_user});
+            db.execSQL("insert into user_table values(null, ?, ?, ?, ?, ?, 0, ?)", new Object[]{item.getUsername(), item.getPassword(), item.getPhone(), item.getEmailAd(), item.getSignature(), ""+R.drawable.ic_appbar_user});
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -150,7 +151,9 @@ public class DatabaseOperationDao {
         news_table (news_id, title, type, digest, read_amount, review_amount, like_amount, content, last_edit_time, release_user_id, cover_pic_id)
         目前cover_pic不是id，是图片
         */
-        Cursor cursor = db.query("news_table", null, null, null, null, null, null, null);
+        //Cursor cursor = db.query("news_table", null, null, null, null, null, null, null);
+        String sql = "select * from news_table order by last_edit_time desc";
+        Cursor cursor = db.rawQuery(sql, null);
         while (cursor.moveToNext()) {
             NewsBean.ResultBean.DataBean item = new NewsBean.ResultBean.DataBean();
             item.setUniquekey(cursor.getString(cursor.getColumnIndex("news_id")));
@@ -175,7 +178,9 @@ public class DatabaseOperationDao {
     public List<NewsBean.ResultBean.DataBean> getNewsDataBeanList(int start, int len) {
         List<NewsBean.ResultBean.DataBean> result = new ArrayList<>();
         // news_table (news_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url, cover_pic2_url, cover_pic3_url)
-        Cursor cursor = db.query("news_table", null, null, null, null, null, null, ""+start+","+len+"");
+        //Cursor cursor = db.query("news_table", null, null, null, null, null, null, ""+start+","+len+"");
+        String sql = "select * from news_table order by last_edit_time desc limit "+start+" , "+len;
+        Cursor cursor = db.rawQuery(sql, null);
         while (cursor.moveToNext()) {
             NewsBean.ResultBean.DataBean item = new NewsBean.ResultBean.DataBean();
             item.setUniquekey(cursor.getString(cursor.getColumnIndex("news_id")));
@@ -184,6 +189,28 @@ public class DatabaseOperationDao {
             //item.setReadAmount(cursor.getInt(cursor.getColumnIndex("read_amount")));
             //item.setReviewAmount(cursor.getInt(cursor.getColumnIndex("review_amount")));
             //item.setLikeAmount(cursor.getInt(cursor.getColumnIndex("like_amount")));
+            item.setUrl(cursor.getString(cursor.getColumnIndex("content_url")));
+            item.setDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
+            item.setAuthor_name(cursor.getString(cursor.getColumnIndex("release_source")));
+            item.setThumbnail_pic_s(cursor.getString(cursor.getColumnIndex("cover_pic1_url")));
+            item.setThumbnail_pic_s02(cursor.getString(cursor.getColumnIndex("cover_pic2_url")));
+            item.setThumbnail_pic_s03(cursor.getString(cursor.getColumnIndex("cover_pic3_url")));
+            result.add(item);
+        }
+        cursor.close();
+        return result;
+    }
+
+    public List<NewsBean.ResultBean.DataBean> searchNewsDataBeanList(String key) {
+        List<NewsBean.ResultBean.DataBean> result = new ArrayList<>();
+        // news_table (news_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url, cover_pic2_url, cover_pic3_url)
+        //Cursor cursor = db.query("news_table", null, "title like ?", new String[]{"%d"+key+"%d"}, null, null, null, null);
+        String sql = "select * from news_table where title like '%"+ key+"%' order by last_edit_time desc";
+        Cursor cursor = db.rawQuery(sql, null);
+        while (cursor.moveToNext()) {
+            NewsBean.ResultBean.DataBean item = new NewsBean.ResultBean.DataBean();
+            item.setUniquekey(cursor.getString(cursor.getColumnIndex("news_id")));
+            item.setTitle(cursor.getString(cursor.getColumnIndex("title")));
             item.setUrl(cursor.getString(cursor.getColumnIndex("content_url")));
             item.setDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
             item.setAuthor_name(cursor.getString(cursor.getColumnIndex("release_source")));
@@ -241,10 +268,35 @@ public class DatabaseOperationDao {
         List<NewsBean.ResultBean.DataBean> result = new ArrayList<>();
         //favorite_table (favorite_id, user_id, news_id)
         // news_table (news_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url, cover_pic2_url, cover_pic3_url)
-        String sql = "select * from news_table, favorite_table where news_table.news_id = favorite_table.news_id and user_id = ? order by favorite_id";
+        String sql = "select * from news_table, favorite_table where news_table.news_id = favorite_table.news_id and user_id = ? order by favorite_id desc";
         //String sql = "select * from news_table where news_id in (select news_id from favorite_table where user_id = ?)";
         Cursor cursor = db.rawQuery(sql, new String[]{uid+""});
         //Cursor cursor = db.query("favorite_table", null, null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            //Log.d("hello", "getFavoriteNews---");
+            NewsBean.ResultBean.DataBean item = new NewsBean.ResultBean.DataBean();
+            //item.setId(cursor.getInt(cursor.getColumnIndex("favorite_id")));
+            item.setUniquekey(cursor.getString(cursor.getColumnIndex("news_id")));
+            item.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+            //item.setIntroduction(cursor.getString(cursor.getColumnIndex("digest")));
+            item.setUrl(cursor.getString(cursor.getColumnIndex("content_url")));
+            item.setDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
+            item.setAuthor_name(cursor.getString(cursor.getColumnIndex("release_source")));
+            item.setThumbnail_pic_s(cursor.getString(cursor.getColumnIndex("cover_pic1_url")));
+            item.setThumbnail_pic_s02(cursor.getString(cursor.getColumnIndex("cover_pic2_url")));
+            item.setThumbnail_pic_s03(cursor.getString(cursor.getColumnIndex("cover_pic3_url")));
+            result.add(item);
+        }
+        cursor.close();
+        return result;
+    }
+
+    public List<NewsBean.ResultBean.DataBean> searchNewsFavoriteList(int uid, String key) {
+        List<NewsBean.ResultBean.DataBean> result = new ArrayList<>();
+        //favorite_table (favorite_id, user_id, news_id)
+        // news_table (news_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url, cover_pic2_url, cover_pic3_url)
+        String sql = "select * from news_table, favorite_table where news_table.news_id = favorite_table.news_id and user_id = ? and title like '%"+ key+"%' order by favorite_id desc";
+        Cursor cursor = db.rawQuery(sql, new String[]{uid+""});
         while (cursor.moveToNext()) {
             //Log.d("hello", "getFavoriteNews---");
             NewsBean.ResultBean.DataBean item = new NewsBean.ResultBean.DataBean();
@@ -309,6 +361,21 @@ public class DatabaseOperationDao {
         }
     }
 
+    public void deleteAllNewsFavoriteDisplay(int uid) {
+        db.beginTransaction();
+        try {
+            String sql = "select * from favorite_table where user_id = ?";
+            Cursor cursor = db.rawQuery(sql, new String[]{uid+""});
+            while (cursor.moveToNext()) {
+                deleteNewsFavoriteDisplayItem(cursor.getInt(cursor.getColumnIndex("favorite_id")));
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+        }finally {
+            db.endTransaction();
+        }
+    }
+
     public void deleteNewsFavoriteDisplayItem(long id) {
         String sql = "delete from favorite_table where favorite_id = "+id;
         //Log.d("hello", "deleteNewsFavorite---");
@@ -338,7 +405,7 @@ public class DatabaseOperationDao {
         //history_table (history_id, user_id, news_id)
         //Cursor cursor = db.query("history_table", null, null, null, null, null, null);
         // news_table (news_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url, cover_pic2_url, cover_pic3_url)
-        String sql = "select * from news_table,history_table where news_table.news_id = history_table.news_id and user_id = ? order by history_id";
+        String sql = "select * from news_table,history_table where news_table.news_id = history_table.news_id and user_id = ? order by history_id desc";
         //select * from news_table where news_id in (select news_id from history_table where user_id = ?)这样写，按照uniqkey排序
         Cursor cursor = db.rawQuery(sql, new String[]{uid+""});
         while (cursor.moveToNext()) {
@@ -359,6 +426,32 @@ public class DatabaseOperationDao {
         cursor.close();
         return result;
     }
+
+    public List<NewsBean.ResultBean.DataBean> searchNewsHistoryList(int uid, String key) {
+        List<NewsBean.ResultBean.DataBean> result = new ArrayList<>();
+        //history_table (history_id, user_id, news_id)
+        // news_table (news_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url, cover_pic2_url, cover_pic3_url)
+        String sql = "select * from news_table,history_table where news_table.news_id = history_table.news_id and user_id = ? and title like '%"+key+"%'order by history_id desc";
+        Cursor cursor = db.rawQuery(sql, new String[]{uid+""});
+        while (cursor.moveToNext()) {
+            NewsBean.ResultBean.DataBean item = new NewsBean.ResultBean.DataBean();
+            //item.setId(cursor.getInt(cursor.getColumnIndex("history_id")));
+            item.setUniquekey(cursor.getString(cursor.getColumnIndex("news_id")));
+            //Log.d("hello", "newsId---"+cursor.getString(cursor.getColumnIndex("news_id")));
+            item.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+            //item.setIntroduction(cursor.getString(cursor.getColumnIndex("digest")));
+            item.setUrl(cursor.getString(cursor.getColumnIndex("content_url")));
+            item.setDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
+            item.setAuthor_name(cursor.getString(cursor.getColumnIndex("release_source")));
+            item.setThumbnail_pic_s(cursor.getString(cursor.getColumnIndex("cover_pic1_url")));
+            item.setThumbnail_pic_s02(cursor.getString(cursor.getColumnIndex("cover_pic2_url")));
+            item.setThumbnail_pic_s03(cursor.getString(cursor.getColumnIndex("cover_pic3_url")));
+            result.add(item);
+        }
+        cursor.close();
+        return result;
+    }
+
     public void getNewsHistoryDisplayItemList() {
         String sql = "select * from history_table";
         Cursor cursor = db.rawQuery(sql, null);
@@ -378,6 +471,21 @@ public class DatabaseOperationDao {
             db.execSQL("insert into history_table values(null, ?, ?)", new Object[]{uid, newsId});
             db.setTransactionSuccessful();
         } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void deleteAllNewsHistoryDisplay(int uid) {
+        db.beginTransaction();
+        try {
+            String sql = "select * from history_table where user_id = ?";
+            Cursor cursor = db.rawQuery(sql, new String[]{uid+""});
+            while (cursor.moveToNext()) {
+                deleteNewsHistoryDisplayItem(cursor.getInt(cursor.getColumnIndex("history_id")));
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+        }finally {
             db.endTransaction();
         }
     }

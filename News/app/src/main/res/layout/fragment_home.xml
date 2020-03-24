@@ -88,8 +88,9 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="30dp"
         android:adjustViewBounds="true"
-        android:src="@android:drawable/ic_menu_upload"
+        android:alpha="0.6"
+        android:src="@drawable/ic_newslist_upstick"
         app:backgroundTint="#8071C9CE"
-        app:maxImageSize="35dp" />
+        app:maxImageSize="25dp" />
 
 </RelativeLayout>

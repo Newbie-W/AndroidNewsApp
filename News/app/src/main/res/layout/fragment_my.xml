@@ -1,14 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:divider="@android:color/background_dark"
+    android:showDividers="middle|end"
+    android:orientation="vertical"
     tools:context=".fragment.MyFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
+        android:id="@+id/layout_imgView_avatar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_my_fragment" />
+        android:layout_height="120dp"
+        android:padding="20dp">
 
-</FrameLayout>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageView_avatar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_appbar_user"
+            app:civ_border_color="#ffffff"
+            app:civ_border_width="2dp" />
+    </RelativeLayout>
+
+    <com.knewbie.news.widget.ItemGroup
+        android:id="@+id/itemGroup_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:content_text="请输入用户名"
+        app:nextChoice_visible="true"
+        app:title="用户名"></com.knewbie.news.widget.ItemGroup>
+
+    <com.knewbie.news.widget.ItemGroup
+        android:id="@+id/itemGroup_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:content_text="请输入手机号"
+        app:nextChoice_visible="true"
+        app:title="手机号"></com.knewbie.news.widget.ItemGroup>
+
+    <com.knewbie.news.widget.ItemGroup
+        android:id="@+id/itemGroup_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:content_text="请输入邮箱"
+        app:nextChoice_visible="true"
+        app:title="邮箱"></com.knewbie.news.widget.ItemGroup>
+
+    <com.knewbie.news.widget.ItemGroup
+        android:id="@+id/itemGroup_signature"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:content_text="请输入个性签名"
+        app:nextChoice_visible="true"
+        app:title="个性签名"></com.knewbie.news.widget.ItemGroup>
+
+</LinearLayout>

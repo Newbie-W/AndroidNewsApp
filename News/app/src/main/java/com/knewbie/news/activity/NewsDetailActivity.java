@@ -33,6 +33,8 @@ public class NewsDetailActivity extends AppCompatActivity {
     private int uid = 0;
     private String newsId;
     private boolean hasRun=false;
+    private int favoriteId=-1;     //记录是否是收藏了
+    private MenuItem menuItemFavorite;
     private String selectorAd[] = {"body > div.top-wrap.gg-item.J-gg-item", "#J_in_list", "body > div.articledown-wrap.gg-item.J-gg-item",
             "body > div.articledown2-wrap.gg-item.J-gg-item", "#news_check", "#J_interest_news", "#J_hot_news", "#J_interest_news > div.three-wrap.gg-item.J-gg-item", "#J_in_list > div:nth-child(1)"};
 
@@ -47,6 +49,9 @@ public class NewsDetailActivity extends AppCompatActivity {
         toolbarTop = findViewById(R.id.toolbarTop_NewsDetail);
         toolbarBottom = findViewById(R.id.toolbarBottom_NewsDetail);
         webViewNewDetail = findViewById(R.id.webView_newsDetail);
+        toolbarBottom.inflateMenu(R.menu.toolbar_news_detail_bottom);
+        if (menuItemFavorite==null)
+            menuItemFavorite = toolbarBottom.getMenu().findItem(R.id.toolbarItem_collect);
         //url = getIntent().getStringExtra("url");
         GlobalApplication application = (GlobalApplication) getApplication();
         UserBean userBean = application.getUserBean();
@@ -56,7 +61,14 @@ public class NewsDetailActivity extends AppCompatActivity {
         newsId = dataBean.getUniquekey();
         url = dataBean.getUrl();
         //uid = getIntent().getIntExtra("uid", 0);
+
         DatabaseOperationDao dbManager = application.getDatabaseOperationDao();
+
+
+        favoriteId = dbManager.findNewsFavorite(uid, newsId);
+        if (favoriteId != -1) {
+            menuItemFavorite.setTitle("取消收藏");
+        }
         int historyId = dbManager.findNewsHistory(uid, newsId);
         //int len = dbManager.getNewsHistoryList(uid).size();
         if (historyId == -1) {
@@ -137,7 +149,7 @@ public class NewsDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbarTop);
 
         //toolbarTop.inflateMenu(R.menu.toolbar_news_detail_top);
-        toolbarBottom.inflateMenu(R.menu.toolbar_news_detail_bottom);
+        //menuItemFavorite = toolbarBottom.getMenu().findItem(R.id.toolbarItem_collect);
         toolbarBottom.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -153,14 +165,20 @@ public class NewsDetailActivity extends AppCompatActivity {
                         }
                         GlobalApplication application = (GlobalApplication) getApplication();
                         DatabaseOperationDao dbManager = application.getDatabaseOperationDao();
-                        int favoriteId = dbManager.findNewsFavorite(uid, newsId);
+                        favoriteId = dbManager.findNewsFavorite(uid, newsId);
                         if (favoriteId == -1) {
                             dbManager.addNewsFavoriteDisplayItem(uid, newsId);
                             Toast.makeText(NewsDetailActivity.this, "收藏成功！", Toast.LENGTH_SHORT).show();
+                            if (menuItemFavorite==null)
+                                menuItemFavorite = toolbarBottom.getMenu().findItem(R.id.toolbarItem_collect);
+                            menuItemFavorite.setTitle("取消收藏");
                             //dbManager.getNewsFavoriteDisplayItemList();
                         } else {
                             Toast.makeText(NewsDetailActivity.this, "您已收藏过，已取消收藏", Toast.LENGTH_SHORT).show();
                             dbManager.deleteNewsFavoriteDisplayItem(favoriteId);
+                            if (menuItemFavorite==null)
+                                menuItemFavorite = toolbarBottom.getMenu().findItem(R.id.toolbarItem_collect);
+                            menuItemFavorite.setTitle("收藏");
                             setResult(RESULT_OK);
                             //dbManager.getNewsFavoriteDisplayItemList();
                         }

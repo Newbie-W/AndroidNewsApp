@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 允许写手机存储 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 允许访问网络状态 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- GUI自动填充验证码功能 -->
@@ -28,9 +29,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.AddNewsOrVideoActivity" />
         <activity android:name=".activity.InformationActivity" />
-        <activity android:name=".activity.HistoryActivity" />
+        <activity android:name=".activity.HistoryActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.FollowActivity" />
-        <activity android:name=".activity.FavoriteActivity" />
+        <activity android:name=".activity.FavoriteActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.SettingActivity">
             <intent-filter>
                 <action android:name="showSetting" />
@@ -51,7 +54,7 @@
         </activity>
         <activity
             android:name=".activity.SplashActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.LauncherWithoutActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

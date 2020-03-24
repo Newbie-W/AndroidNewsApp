@@ -7,17 +7,24 @@
     android:orientation="vertical"
     tools:context=".activity.HistoryActivity">
 
-    <TextView
-        android:id="@+id/textViewHistory"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarFavorite"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:gravity="center_horizontal"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:text="我的历史"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/AppTheme.PopupOverlay">
+
+        <TextView
+            android:id="@+id/textViewHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="我的历史"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </androidx.appcompat.widget.Toolbar>
 
     <ListView
         android:id="@+id/listViewHistory"

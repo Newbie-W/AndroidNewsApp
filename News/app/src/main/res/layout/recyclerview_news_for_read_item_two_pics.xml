@@ -10,32 +10,57 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp">
 
         <RelativeLayout
             android:id="@+id/layout_newsDisplayItem_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
             android:layout_marginRight="5dp">
 
-            <ImageView
-                android:id="@+id/imageViewNewsPic1_recyclerview"
+            <LinearLayout
+                android:id="@+id/layoutNewsPic_recyclerview"
                 android:layout_width="match_parent"
-                android:layout_height="190dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="160dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_marginBottom="10dp"
-                android:adjustViewBounds="true"
-                android:scaleType="fitXY"
-                android:src="@drawable/abc_btn_radio_material"
-                app:srcCompat="@drawable/logo_news_fill_2" />
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/imageViewNewsPic1_recyclerview"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/abc_btn_radio_material"
+                    app:srcCompat="@drawable/logo_news_fill_2" />
+
+                <ImageView
+                    android:id="@+id/imageViewNewsPic2_recyclerview"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/ic_menu_gallery" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textViewTitle_recyclerview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/imageViewNewsPic1_recyclerview"
+                android:layout_below="@id/layoutNewsPic_recyclerview"
                 android:text="题标题标题标题标题标题标题标题题标题题标题标题标题题标题标题"
                 android:textSize="20sp" />
 
@@ -55,7 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/layout_newsDisplayItem_recyclerview"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="15dp"
             android:paddingLeft="15dp"
             android:paddingTop="5dp">
 

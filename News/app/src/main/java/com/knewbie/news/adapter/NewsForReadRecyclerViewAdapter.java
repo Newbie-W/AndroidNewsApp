@@ -64,7 +64,7 @@ public class NewsForReadRecyclerViewAdapter extends RecyclerView.Adapter<NewsFor
     public class NewsForReadItemViewHolder extends RecyclerView.ViewHolder{
         TextView textViewTitle;
         TextView textViewAuthor;
-        TextView textViewIntroduction;
+        //TextView textViewIntroduction;
         ImageView imageViewNewsPic;
         ImageView imageViewNewsPicSecond = itemView.findViewById(R.id.imageViewNewsPic2_recyclerview);;
         ImageView imageViewNewsPicThird = itemView.findViewById(R.id.imageViewNewsPic3_recyclerview);;
@@ -119,7 +119,7 @@ public class NewsForReadRecyclerViewAdapter extends RecyclerView.Adapter<NewsFor
         private void initOnePicListParam() {
             textViewTitle = (TextView)itemView.findViewById(R.id.textViewTitle_recyclerview);
             textViewAuthor = (TextView) itemView.findViewById(R.id.textViewAuthor_recyclerview);
-            textViewIntroduction = (TextView) itemView.findViewById(R.id.textViewIntroduction_recyclerview);
+            //textViewIntroduction = (TextView) itemView.findViewById(R.id.textViewIntroduction_recyclerview);
             imageViewNewsPic = (ImageView) itemView.findViewById(R.id.imageViewNewsPic1_recyclerview);
             textViewReadAmount = (TextView) itemView.findViewById(R.id.textViewReadAmount_recyclerview);
             textViewLikeAmount = (TextView) itemView.findViewById(R.id.textViewLikeAmount_recyclerview);
@@ -269,6 +269,10 @@ public class NewsForReadRecyclerViewAdapter extends RecyclerView.Adapter<NewsFor
                 .load(item.getThumbnail_pic_s())
                 .apply(options)
                 .into(holder.imageViewNewsPic);
+        Glide.with(context)
+                .load(item.getThumbnail_pic_s02())
+                .apply(options)
+                .into(holder.imageViewNewsPicSecond);
         //ImageLoader.getInstance().displayImage(item.getThumbnail_pic_s(), holder.imageViewNewsPic, getOption());
     }
 

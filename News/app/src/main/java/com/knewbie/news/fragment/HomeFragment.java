@@ -135,7 +135,6 @@ public class HomeFragment extends Fragment {
                     public void run() {
                         swipeRefreshLayout.setRefreshing(false);
                         //Log.d("hello", "swipeRefresh-----1");
-                        // 实现从数据库中读取数据刷新到listview适配器中
                         new Thread(new Runnable() {
                             @Override
                             public void run() {

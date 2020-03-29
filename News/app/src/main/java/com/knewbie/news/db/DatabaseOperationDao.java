@@ -8,8 +8,11 @@ import android.util.Log;
 import com.knewbie.news.R;
 import com.knewbie.news.entity.NewsBean;
 import com.knewbie.news.entity.UserBean;
+import com.knewbie.news.entity.VideoBean;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DatabaseOperationDao {
@@ -253,6 +256,118 @@ public class DatabaseOperationDao {
             db.endTransaction();
         }
     }
+
+    /*
+     * Video
+     */
+
+    public List<VideoBean.BodyListBean> getVideoBeanList() {
+        List<VideoBean.BodyListBean> result = new ArrayList<>();
+        // video_table (video_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url)
+        String sql = "select * from video_table order by last_edit_time desc";
+        Cursor cursor = db.rawQuery(sql, null);
+        while (cursor.moveToNext()) {
+            VideoBean.BodyListBean item = new VideoBean.BodyListBean();
+            item.setInfoId(cursor.getString(cursor.getColumnIndex("video_id")));
+            item.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+            item.getMemberItem().setName(cursor.getString(cursor.getColumnIndex("title")));
+            //item.setIntroduction(cursor.getString(cursor.getColumnIndex("digest")));
+            //item.setReadAmount(cursor.getInt(cursor.getColumnIndex("read_amount")));
+            //item.setReviewAmount(cursor.getInt(cursor.getColumnIndex("review_amount")));
+            //item.setLikeAmount(cursor.getInt(cursor.getColumnIndex("like_amount")));
+            item.getMemberItem().getVideoFiles().get(0).setMediaUrl(cursor.getString(cursor.getColumnIndex("content_url")));
+            item.setCreateDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
+            //item.setUpdateDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
+            item.getWeMedia().setName(cursor.getString(cursor.getColumnIndex("release_source")));
+            item.getMemberItem().setImage(cursor.getString(cursor.getColumnIndex("cover_pic1_url")));
+            //item.setPic(cursor.getInt(cursor.getColumnIndex("cover_pic_id")));
+            result.add(item);
+        }
+        cursor.close();
+        return result;
+    }
+
+    public List<VideoBean.BodyListBean> getVideoBeanList(int start, int len) {
+        List<VideoBean.BodyListBean> result = new ArrayList<>();
+        // video_table (video_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url)
+        //Cursor cursor = db.query("video_table", null, null, null, null, null, null, ""+start+","+len+"");
+        String sql = "select * from video_table order by last_edit_time desc limit "+start+" , "+len;
+        Cursor cursor = db.rawQuery(sql, null);
+        while (cursor.moveToNext()) {
+            VideoBean.BodyListBean item = new VideoBean.BodyListBean();
+            item.setInfoId(cursor.getString(cursor.getColumnIndex("video_id")));
+            item.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+            item.getMemberItem().setName(cursor.getString(cursor.getColumnIndex("title")));
+            item.getMemberItem().getVideoFiles().get(0).setMediaUrl(cursor.getString(cursor.getColumnIndex("content_url")));
+            item.setCreateDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
+            //item.setUpdateDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
+            item.getWeMedia().setName(cursor.getString(cursor.getColumnIndex("release_source")));
+            item.getMemberItem().setImage(cursor.getString(cursor.getColumnIndex("cover_pic1_url")));
+            result.add(item);
+        }
+        cursor.close();
+        return result;
+    }
+
+    public List<VideoBean.BodyListBean> searchVideoBeanList(String key) {
+        List<VideoBean.BodyListBean> result = new ArrayList<>();
+        // video_table (video_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url)
+        //Cursor cursor = db.query("video_table", null, "title like ?", new String[]{"%d"+key+"%d"}, null, null, null, null);
+        String sql = "select * from video_table where title like '%"+ key+"%' order by last_edit_time desc"; //
+        Cursor cursor = db.rawQuery(sql, null);
+        while (cursor.moveToNext()) {
+            VideoBean.BodyListBean item = new VideoBean.BodyListBean();
+            item.setInfoId(cursor.getString(cursor.getColumnIndex("video_id")));
+            item.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+            item.getMemberItem().setName(cursor.getString(cursor.getColumnIndex("title")));
+            //item.setIntroduction(cursor.getString(cursor.getColumnIndex("digest")));
+            //item.setReadAmount(cursor.getInt(cursor.getColumnIndex("read_amount")));
+            //item.setReviewAmount(cursor.getInt(cursor.getColumnIndex("review_amount")));
+            //item.setLikeAmount(cursor.getInt(cursor.getColumnIndex("like_amount")));
+            item.getMemberItem().getVideoFiles().get(0).setMediaUrl(cursor.getString(cursor.getColumnIndex("content_url")));
+            item.setCreateDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
+            //item.setUpdateDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
+            item.getWeMedia().setName(cursor.getString(cursor.getColumnIndex("release_source")));
+            item.getMemberItem().setImage(cursor.getString(cursor.getColumnIndex("cover_pic1_url")));
+            result.add(item);
+        }
+        cursor.close();
+        return result;
+    }
+
+    public boolean findVideo(String id) {
+        Cursor cursor = db.query("video_table", null, "video_id = ?", new String[]{id}, null, null, null);
+        /*if (cursor.moveToNext()) {
+            return true;
+        } else return false;*/
+        return cursor.moveToNext();
+    }
+
+    public void addVideoBean(VideoBean.BodyListBean item) {
+        db.beginTransaction();
+        try {
+            // video_table (video_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url)
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String nowTime = simpleDateFormat.format(new Date());
+            db.execSQL("insert into video_table values(?, ?, ?, ?, 0, 0, 0, ?, ?, ?, ?)", new Object[]{item.getInfoId(), item.getWeMedia().getName(), item.getTag(), "", item.getMemberItem().getVideoFiles().get(0).getMediaUrl(), nowTime, item.getWeMedia().getName(), item.getMemberItem().getImage()});
+            //Log.d("hello", "pic2"+item.getThumbnail_pic_s02()+"pic3"+item.getThumbnail_pic_s03());
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void deleteVideoBean(String id) {
+        String sql = "delete from video_table where video_id = '"+ id +"'";
+        db.beginTransaction();
+        try {
+            db.execSQL(sql);
+            db.setTransactionSuccessful();
+        }finally {
+            db.endTransaction();
+        }
+    }
+
 
     /*
      * Favorite News

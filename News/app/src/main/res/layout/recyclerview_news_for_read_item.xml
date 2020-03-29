@@ -15,19 +15,28 @@
         <RelativeLayout
             android:id="@+id/layout_newsDisplayItem_recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp">
+
+            <ImageView
+                android:id="@+id/imageViewNewsPic1_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/abc_btn_radio_material"
+                app:srcCompat="@drawable/logo_news_fill_2" />
 
             <TextView
                 android:id="@+id/textViewTitle_recyclerview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="5dp"
-                android:layout_toLeftOf="@id/imageViewNewsPic1_recyclerview"
-                android:text="题标题标题标题标题标题标题标题"
+                android:layout_below="@id/imageViewNewsPic1_recyclerview"
+                android:text="题标题标题标题标题标题标题标题题标题题标题标题标题题标题标题"
                 android:textSize="20sp" />
 
             <TextView
@@ -35,39 +44,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textViewTitle_recyclerview"
-                android:layout_alignParentTop="false"
-                android:layout_marginLeft="70dp"
-                android:layout_marginTop="5dp"
+                android:layout_alignParentRight="true"
                 android:text="News官方作者"
                 android:textSize="12sp" />
-
-            <ImageView
-                android:id="@+id/imageViewNewsPic1_recyclerview"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_alignParentTop="false"
-                android:layout_alignParentRight="true"
-                android:layout_centerHorizontal="false"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="15dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/abc_btn_radio_material" />
-
-            <TextView
-                android:id="@+id/textViewIntroduction_recyclerview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textViewAuthor_recyclerview"
-                android:layout_alignLeft="@id/imageViewNewsPic1_recyclerview"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="false"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_toLeftOf="@id/imageViewNewsPic1_recyclerview"
-                android:maxLines="2"
-                android:text="这是一段引言，这是一段引言，这是一段引言，这是一段引言。这是一段引言，这是一段引言，这是一段引言，这是一段引言。这是一段引言，这是一段引言，这是一段引言，这是一段引言。这是一段引言，这是一段引言，这是一段引言，这是一段引言。" />
 
         </RelativeLayout>
 
@@ -76,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/layout_newsDisplayItem_recyclerview"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="10dp"
             android:paddingLeft="15dp"
             android:paddingTop="5dp">
 

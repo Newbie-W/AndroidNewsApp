@@ -30,6 +30,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
         sql = "create table news_table(news_id text primary key, title text, type text, digest text, read_amount integer, review_amount integer, like_amount integer, content_url text, last_edit_time text, release_source text, cover_pic1_url text, cover_pic2_url text, cover_pic3_url text)";
         db.execSQL(sql);
+        sql = "create table video_table(video_id text primary key, title text, type text, digest text, read_amount integer, review_amount integer, like_amount integer, content_url text, last_edit_time text, release_source text, cover_pic1_url text)";
+        db.execSQL(sql);
         sql = "create table pic_table(pic_id integer primary key autoincrement, news_id integer, pic_src integer, pic_address text)";
         db.execSQL(sql);
         /* 评论记录，回复记录，反馈记录

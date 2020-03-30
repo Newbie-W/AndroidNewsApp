@@ -261,6 +261,23 @@ public class DatabaseOperationDao {
      * Video
      */
 
+    public void getVideoAllList() {
+        String sql = "select * from video_table";
+        Cursor cursor = db.rawQuery(sql, null);
+        while (cursor.moveToNext()) {
+            Log.d("hello", "video----id-"+cursor.getString(cursor.getColumnIndex("video_id"))//+"\n"
+                    + "----"+cursor.getString(cursor.getColumnIndex("title"))//+"\n"
+                    + "----"+cursor.getString(cursor.getColumnIndex("content_url"))//+"\n"
+                    + "----"+cursor.getString(cursor.getColumnIndex("last_edit_time"))//+"\n"
+                    + "----"+cursor.getString(cursor.getColumnIndex("release_source"))//+"\n"
+                    + "----"+cursor.getString(cursor.getColumnIndex("cover_pic1_url"))//+"\n"
+                    //+ "----"++"\n"
+            );
+        }
+        cursor.close();
+        //return result;
+    }
+
     public List<VideoBean.BodyListBean> getVideoBeanList() {
         List<VideoBean.BodyListBean> result = new ArrayList<>();
         // video_table (video_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url)
@@ -268,14 +285,20 @@ public class DatabaseOperationDao {
         Cursor cursor = db.rawQuery(sql, null);
         while (cursor.moveToNext()) {
             VideoBean.BodyListBean item = new VideoBean.BodyListBean();
+            item.setMemberItem(new VideoBean.BodyListBean.MemberItemBean());
+            item.setWeMedia(new VideoBean.BodyListBean.WeMediaBean());
             item.setInfoId(cursor.getString(cursor.getColumnIndex("video_id")));
             item.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-            item.getMemberItem().setName(cursor.getString(cursor.getColumnIndex("title")));
+            (item.getMemberItem()).setName(cursor.getString(cursor.getColumnIndex("title")));
             //item.setIntroduction(cursor.getString(cursor.getColumnIndex("digest")));
             //item.setReadAmount(cursor.getInt(cursor.getColumnIndex("read_amount")));
             //item.setReviewAmount(cursor.getInt(cursor.getColumnIndex("review_amount")));
             //item.setLikeAmount(cursor.getInt(cursor.getColumnIndex("like_amount")));
-            item.getMemberItem().getVideoFiles().get(0).setMediaUrl(cursor.getString(cursor.getColumnIndex("content_url")));
+            VideoBean.BodyListBean.MemberItemBean.VideoFilesBean videoFilesBean = new VideoBean.BodyListBean.MemberItemBean.VideoFilesBean();   //一定要赋初值
+            videoFilesBean.setMediaUrl(cursor.getString(cursor.getColumnIndex("content_url")));
+            List<VideoBean.BodyListBean.MemberItemBean.VideoFilesBean> videoFilesBeanList = new ArrayList<>();
+            videoFilesBeanList.add(videoFilesBean);
+            item.getMemberItem().setVideoFiles(videoFilesBeanList);
             item.setCreateDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
             //item.setUpdateDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
             item.getWeMedia().setName(cursor.getString(cursor.getColumnIndex("release_source")));
@@ -295,14 +318,25 @@ public class DatabaseOperationDao {
         Cursor cursor = db.rawQuery(sql, null);
         while (cursor.moveToNext()) {
             VideoBean.BodyListBean item = new VideoBean.BodyListBean();
+            item.setMemberItem(new VideoBean.BodyListBean.MemberItemBean());
+            item.setWeMedia(new VideoBean.BodyListBean.WeMediaBean());
             item.setInfoId(cursor.getString(cursor.getColumnIndex("video_id")));
             item.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-            item.getMemberItem().setName(cursor.getString(cursor.getColumnIndex("title")));
-            item.getMemberItem().getVideoFiles().get(0).setMediaUrl(cursor.getString(cursor.getColumnIndex("content_url")));
+            (item.getMemberItem()).setName(cursor.getString(cursor.getColumnIndex("title")));
+            //item.setIntroduction(cursor.getString(cursor.getColumnIndex("digest")));
+            //item.setReadAmount(cursor.getInt(cursor.getColumnIndex("read_amount")));
+            //item.setReviewAmount(cursor.getInt(cursor.getColumnIndex("review_amount")));
+            //item.setLikeAmount(cursor.getInt(cursor.getColumnIndex("like_amount")));
+            VideoBean.BodyListBean.MemberItemBean.VideoFilesBean videoFilesBean = new VideoBean.BodyListBean.MemberItemBean.VideoFilesBean();
+            videoFilesBean.setMediaUrl(cursor.getString(cursor.getColumnIndex("content_url")));
+            List<VideoBean.BodyListBean.MemberItemBean.VideoFilesBean> videoFilesBeanList = new ArrayList<>();
+            videoFilesBeanList.add(videoFilesBean);
+            item.getMemberItem().setVideoFiles(videoFilesBeanList);
             item.setCreateDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
             //item.setUpdateDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
             item.getWeMedia().setName(cursor.getString(cursor.getColumnIndex("release_source")));
             item.getMemberItem().setImage(cursor.getString(cursor.getColumnIndex("cover_pic1_url")));
+            //item.setPic(cursor.getInt(cursor.getColumnIndex("cover_pic_id")));
             result.add(item);
         }
         cursor.close();
@@ -317,18 +351,26 @@ public class DatabaseOperationDao {
         Cursor cursor = db.rawQuery(sql, null);
         while (cursor.moveToNext()) {
             VideoBean.BodyListBean item = new VideoBean.BodyListBean();
+            item.setMemberItem(new VideoBean.BodyListBean.MemberItemBean());
+            //Log.d("hello", "search---MemberItem()"+item.getMemberItem().getName()+", VideoFilesSize"+item.getMemberItem().getVideoFiles().size());
+            item.setWeMedia(new VideoBean.BodyListBean.WeMediaBean());
             item.setInfoId(cursor.getString(cursor.getColumnIndex("video_id")));
             item.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-            item.getMemberItem().setName(cursor.getString(cursor.getColumnIndex("title")));
+            (item.getMemberItem()).setName(cursor.getString(cursor.getColumnIndex("title")));
             //item.setIntroduction(cursor.getString(cursor.getColumnIndex("digest")));
             //item.setReadAmount(cursor.getInt(cursor.getColumnIndex("read_amount")));
             //item.setReviewAmount(cursor.getInt(cursor.getColumnIndex("review_amount")));
             //item.setLikeAmount(cursor.getInt(cursor.getColumnIndex("like_amount")));
-            item.getMemberItem().getVideoFiles().get(0).setMediaUrl(cursor.getString(cursor.getColumnIndex("content_url")));
+            VideoBean.BodyListBean.MemberItemBean.VideoFilesBean videoFilesBean = new VideoBean.BodyListBean.MemberItemBean.VideoFilesBean();
+            videoFilesBean.setMediaUrl(cursor.getString(cursor.getColumnIndex("content_url")));
+            List<VideoBean.BodyListBean.MemberItemBean.VideoFilesBean> videoFilesBeanList = new ArrayList<>();
+            videoFilesBeanList.add(videoFilesBean);
+            item.getMemberItem().setVideoFiles(videoFilesBeanList);
             item.setCreateDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
             //item.setUpdateDate(cursor.getString(cursor.getColumnIndex("last_edit_time")));
             item.getWeMedia().setName(cursor.getString(cursor.getColumnIndex("release_source")));
             item.getMemberItem().setImage(cursor.getString(cursor.getColumnIndex("cover_pic1_url")));
+            //item.setPic(cursor.getInt(cursor.getColumnIndex("cover_pic_id")));
             result.add(item);
         }
         cursor.close();
@@ -347,9 +389,17 @@ public class DatabaseOperationDao {
         db.beginTransaction();
         try {
             // video_table (video_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url)
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String nowTime = simpleDateFormat.format(new Date());
-            db.execSQL("insert into video_table values(?, ?, ?, ?, 0, 0, 0, ?, ?, ?, ?)", new Object[]{item.getInfoId(), item.getWeMedia().getName(), item.getTag(), "", item.getMemberItem().getVideoFiles().get(0).getMediaUrl(), nowTime, item.getWeMedia().getName(), item.getMemberItem().getImage()});
+            Log.d("hello", "insert video----id "+item.getInfoId()//+"\n"
+                            + "----"+item.getWeMedia().getName()//+"\n"
+                            + "----"+item.getMemberItem().getVideoFiles().size()//+"\n"
+                            //+ "----"+item.getMemberItem().getVideoFiles().get(0).getMediaUrl()//+"\n"
+                            + "----"+item.getMemberItem().getName()//+"\n"
+                            + "----"+item.getMemberItem().getImage()//+"\n"
+                    //+ "----"++"\n"
+            );
+            db.execSQL("insert into video_table values(?, ?, ?, ?, 0, 0, 0, ?, ?, ?, ?)", new Object[]{item.getInfoId(), item.getMemberItem().getName(), item.getTag(), "", item.getMemberItem().getVideoFiles().get(0).getMediaUrl(), nowTime, item.getWeMedia().getName(), item.getMemberItem().getImage()});
             //Log.d("hello", "pic2"+item.getThumbnail_pic_s02()+"pic3"+item.getThumbnail_pic_s03());
             db.setTransactionSuccessful();
         } finally {

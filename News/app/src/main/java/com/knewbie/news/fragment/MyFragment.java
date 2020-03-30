@@ -4,6 +4,7 @@ package com.knewbie.news.fragment;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -25,6 +26,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.knewbie.news.MainActivity;
 import com.knewbie.news.R;
 import com.knewbie.news.db.DatabaseOperationDao;
 import com.knewbie.news.entity.UserBean;
@@ -40,6 +42,7 @@ import java.io.File;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.MODE_MULTI_PROCESS;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -83,14 +86,7 @@ public class MyFragment extends Fragment {
         itemGroupPhone = view.findViewById(R.id.itemGroup_phone);
         itemGroupEmail = view.findViewById(R.id.itemGroup_email);
         itemGroupSignature = view.findViewById(R.id.itemGroup_signature);
-        if (userBean.getAvatar() != null)
-            ImageLoader.getInstance().displayImage(userBean.getAvatar(), imageViewAvatar, getOption());
-        else
-            ImageLoader.getInstance().displayImage("drawable://"+R.drawable.ic_appbar_user, imageViewAvatar, getOption());
-        itemGroupName.setText(userBean.getUsername());
-        itemGroupPhone.setText(userBean.getPhone());
-        itemGroupEmail.setText(userBean.getEmailAd());
-        itemGroupSignature.setText(userBean.getSignature());
+        refreshInfo();
         layoutImageViewAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,6 +119,12 @@ public class MyFragment extends Fragment {
                                 dbManager.updateTable("user_table", "username =  '"+input+"'", "user_id = "+userBean.getId());
                                 userBean.setUsername(editText.getText().toString());
                                 itemGroupName.setText(userBean.getUsername());
+                                ((MainActivity)getActivity()).setUsername(userBean.getUsername());
+                                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("newsDatas", MODE_MULTI_PROCESS);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("username", userBean.getUsername());
+                                //editor.putString("user_password", userBean.getPassword());
+                                editor.apply();
                             }
                         }
 
@@ -188,6 +190,7 @@ public class MyFragment extends Fragment {
                         changeInfo(editText, "个性签名", "signature");
                         userBean.setSignature(editText.getText().toString());
                         itemGroupSignature.setText(userBean.getSignature());
+                        ((MainActivity)getActivity()).setSignature(userBean.getSignature());
                     }
                 });
                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -303,6 +306,7 @@ public class MyFragment extends Fragment {
                             ImageLoader.getInstance().displayImage(picPath, imageViewAvatar, getOption());
                             //isUploadPic = true;
                             userBean.setAvatar(picPath);
+                            ((MainActivity)getActivity()).setAppBarIcon(picPath);
                             GlobalApplication globalApplication = (GlobalApplication) getActivity().getApplication();
                             DatabaseOperationDao dbManager = globalApplication.getDatabaseOperationDao();
                             dbManager.updateTable("user_table", "pic =  '"+picPath+"'", "user_id = "+userBean.getId());
@@ -345,5 +349,16 @@ public class MyFragment extends Fragment {
                 .build();
 
         return options;
+    }
+
+    public void refreshInfo() {
+        if (userBean.getAvatar() != null)
+            ImageLoader.getInstance().displayImage(userBean.getAvatar(), imageViewAvatar, getOption());
+        else
+            ImageLoader.getInstance().displayImage("drawable://"+R.drawable.ic_appbar_user, imageViewAvatar, getOption());
+        itemGroupName.setText(userBean.getUsername());
+        itemGroupPhone.setText(userBean.getPhone());
+        itemGroupEmail.setText(userBean.getEmailAd());
+        itemGroupSignature.setText(userBean.getSignature());
     }
 }

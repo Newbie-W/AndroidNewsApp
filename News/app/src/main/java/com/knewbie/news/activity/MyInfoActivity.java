@@ -3,6 +3,7 @@ package com.knewbie.news.activity;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -271,6 +272,11 @@ public class MyInfoActivity extends AppCompatActivity {
                 //intent.putExtra("userBean", userBean);
                 GlobalApplication application = (GlobalApplication) getApplication();
                 application.setUserBean(userBean);
+                SharedPreferences sharedPreferences = getSharedPreferences("newsDatas", MODE_MULTI_PROCESS);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("username", userBean.getUsername());
+                //editor.putString("user_password", userBean.getPassword());
+                editor.apply();
                 setResult(1, intent);
                 //}
                 this.finish();
@@ -288,6 +294,11 @@ public class MyInfoActivity extends AppCompatActivity {
             //intent.putExtra("userBean", userBean);
             GlobalApplication application = (GlobalApplication) getApplication();
             application.setUserBean(userBean);
+            SharedPreferences sharedPreferences = getSharedPreferences("newsDatas", MODE_MULTI_PROCESS);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("username", userBean.getUsername());
+            //editor.putString("user_password", userBean.getPassword());
+            editor.apply();
             setResult(1, intent);
             this.finish();
             return false;

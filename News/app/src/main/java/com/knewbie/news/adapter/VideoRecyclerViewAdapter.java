@@ -57,7 +57,7 @@ public class VideoRecyclerViewAdapter extends RecyclerView.Adapter<VideoRecycler
         holder.time.setText(videoBean.getCreateDate());
         holder.author.setText(videoBean.getWeMedia().getName());
         List<VideoBean.BodyListBean.MemberItemBean.VideoFilesBean> videoFilesBeanList = videoBean.getMemberItem().getVideoFiles();
-        if(videoFilesBeanList!= null)
+        if(videoFilesBeanList!= null && videoFilesBeanList.size()!=0)
             holder.video.setUp(videoFilesBeanList.get(0).getMediaUrl(), videoBean.getTitle());    // , JzvdStd.SCREEN_NORMAL
         Glide.with(context).load(videoBean.getMemberItem().getImage()).into(holder.video.posterImageView);   //tinyBackImageView
     }

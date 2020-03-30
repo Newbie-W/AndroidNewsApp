@@ -1,6 +1,7 @@
 package com.knewbie.news.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -183,7 +184,7 @@ public class PhoneFastLoginActivity extends AppCompatActivity {
         //注册回调监听接口
         SMSSDK.registerEventHandler(eventHandler);
 
-        /*SharedPreferences sharedPreferences = getSharedPreferences("newsDatas", MODE_PRIVATE);
+        /*SharedPreferences sharedPreferences = getSharedPreferences("newsDatas", MODE_PRIVATE);    //MODE_MULTI_PROCESS
         String uname = sharedPreferences.getString("username", null);
         editTextPhone.setText(uname);*/
     }
@@ -252,6 +253,12 @@ public class PhoneFastLoginActivity extends AppCompatActivity {
         Toast.makeText(this, "登录成功", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, MainActivity.class);
         app.setUserBean(userBean);
+        SharedPreferences sharedPreferences = getSharedPreferences("newsDatas", MODE_MULTI_PROCESS);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("phoneNum", phoneNum);
+        editor.putString("username", userBean.getUsername());
+        editor.putString("user_password", userBean.getPassword());
+        editor.apply();
         //intent.putExtra("userBean", userBean);
         startActivity(intent);
         this.finish();

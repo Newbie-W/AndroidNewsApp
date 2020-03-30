@@ -3,12 +3,14 @@ package com.knewbie.news;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +30,7 @@ import com.knewbie.news.activity.FavoriteActivity;
 import com.knewbie.news.activity.FollowActivity;
 import com.knewbie.news.activity.HistoryActivity;
 import com.knewbie.news.activity.InformationActivity;
+import com.knewbie.news.activity.LoginActivity;
 import com.knewbie.news.activity.MyInfoActivity;
 import com.knewbie.news.adapter.ViewPagerAdapter;
 import com.knewbie.news.db.DatabaseOperationDao;
@@ -124,7 +127,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 		
-		//SharedPreferences sharedPreferences = getSharedPreferences("newsDatas", MODE_PRIVATE);
+		//SharedPreferences sharedPreferences = getSharedPreferences("newsDatas", MODE_PRIVATE);    //MODE_MULTI_PROCESS
         //String username = sharedPreferences.getString("username", null);
 
         View headerView = navigationView.getHeaderView(0);
@@ -135,7 +138,30 @@ public class MainActivity extends AppCompatActivity
         appBarIcon = headerView.findViewById(R.id.imageViewAppbarIcon);
         textViewUsername = headerView.findViewById(R.id.textViewAppbarUsername);
         textViewSignature = headerView.findViewById(R.id.textViewAppbarSignature);
-        GlobalApplication application = (GlobalApplication) getApplication();
+
+        GlobalApplication application = (GlobalApplication) this.getApplication();
+        SharedPreferences sharedPreferences = getSharedPreferences("newsDatas", MODE_MULTI_PROCESS);
+        String unameSp = sharedPreferences.getString("username", null);
+        String pwdSp = sharedPreferences.getString("user_password", null);
+        //Log.d("hello", "application"+application+","+application.getUserBean());
+        if (unameSp==null && application.getUserBean() != null) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("username", user.getUsername());
+            editor.putString("user_password", user.getPassword());
+            editor.apply();
+        } else if (unameSp!=null && application.getUserBean() == null) {
+            DatabaseOperationDao dbManager = application.getDatabaseOperationDao();
+            if (dbManager != null ) {
+                application.setUserBean(dbManager.findUser(unameSp, pwdSp));
+            } else {
+                application = new GlobalApplication();
+                application.setUserBean(dbManager.findUser(unameSp, pwdSp));
+            }
+        } else if (unameSp == null && application.getUserBean()==null ) {
+            Toast.makeText(this, "登录信息失效，请重新登录", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
         user = application.getUserBean();
         //user = (UserBean) getIntent().getSerializableExtra("userBean");
         //Toast.makeText(this, "登录成功", Toast.LENGTH_LONG).show();
@@ -203,10 +229,30 @@ public class MainActivity extends AppCompatActivity
     private void searchNews(String query) {
         GlobalApplication application = (GlobalApplication) getApplication();
         DatabaseOperationDao dbManager = application.getDatabaseOperationDao();
-		bottomNavigationView.getMenu().getItem(1).setChecked(true);
-		viewPager.setCurrentItem(1);
         Fragment currentFragment = viewPagerAdapter.getInstantFragment();
         if (currentFragment instanceof HomeFragment) {
+            bottomNavigationView.getMenu().getItem(1).setChecked(true);
+            viewPager.setCurrentItem(1);
+            if (query==null || query.trim().isEmpty())
+                ((HomeFragment) currentFragment).newsBeanList = dbManager.getNewsDataBeanList();
+            else {
+                ((HomeFragment) currentFragment).newsBeanList = dbManager.searchNewsDataBeanList(query);
+            }
+            ((HomeFragment) currentFragment).refresh();
+        } else if(currentFragment instanceof VideoFragment) {
+            bottomNavigationView.getMenu().getItem(0).setChecked(true);
+            viewPager.setCurrentItem(0);
+            if (query==null || query.trim().isEmpty())
+                ((VideoFragment) currentFragment).videoBeanList = dbManager.getVideoBeanList();
+            else {
+                ((VideoFragment) currentFragment).videoBeanList = dbManager.searchVideoBeanList(query);
+            }
+            ((VideoFragment) currentFragment).refresh();
+        } else {
+            Toast.makeText(this, "请在对应页搜索，在当前页搜索，默认只搜索新闻文章", Toast.LENGTH_LONG).show();
+            bottomNavigationView.getMenu().getItem(1).setChecked(true);
+            viewPager.setCurrentItem(1);
+            currentFragment = viewPagerAdapter.getInstantFragment();
             if (query==null || query.trim().isEmpty())
                 ((HomeFragment) currentFragment).newsBeanList = dbManager.getNewsDataBeanList();
             else {
@@ -319,6 +365,9 @@ public class MainActivity extends AppCompatActivity
                     if (user.getSignature()!= null) textViewSignature.setText(user.getSignature());
                     if (user.getAvatar() != null)
                         ImageLoader.getInstance().displayImage(user.getAvatar(), appBarIcon, getOption());
+                    MyFragment fragment = (MyFragment)viewPagerAdapter.instantiateItem(viewPager, 2);
+                    fragment.refreshInfo();
+                    //Toast.makeText(this, "Activity,"+currentFragment+","+((currentFragment instanceof HomeFragment)?"1":"0"), Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -333,6 +382,7 @@ public class MainActivity extends AppCompatActivity
         viewPagerAdapter.addFragment(homeFragment);
         viewPagerAdapter.addFragment(myFragment);
         viewPager.setAdapter(viewPagerAdapter);
+        viewPager.setOffscreenPageLimit(1);
         viewPager.setCurrentItem(1);
     }
 
@@ -350,6 +400,18 @@ public class MainActivity extends AppCompatActivity
                 .build();
 
         return options;
+    }
+
+    public void setAppBarIcon(String icon) {
+        ImageLoader.getInstance().displayImage(icon, appBarIcon, getOption());
+    }
+
+    public void setUsername(String name) {
+        textViewUsername.setText(name);
+    }
+
+    public void setSignature(String signature) {
+        textViewSignature.setText(signature);
     }
     /*public UserBean getUser() {
         return user;

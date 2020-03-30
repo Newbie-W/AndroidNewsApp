@@ -82,7 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
         GlobalApplication app = (GlobalApplication) this.getApplication();
         DatabaseOperationDao dbManager = app.getDatabaseOperationDao();
         if (! dbManager.findUsername(name)) {
-            SharedPreferences sharedPreferences = this.getSharedPreferences("newsDatas", MODE_PRIVATE);
+            SharedPreferences sharedPreferences = this.getSharedPreferences("newsDatas", MODE_MULTI_PROCESS);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("username", name);
             editor.putString("user_password", pwd);

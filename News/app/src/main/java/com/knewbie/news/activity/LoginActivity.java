@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        SharedPreferences sharedPreferences = getSharedPreferences("newsDatas", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("newsDatas", MODE_MULTI_PROCESS);
         String uname = sharedPreferences.getString("username", null);
         editTextUname.setText(uname);
     }
@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
     private void login() {
         String userInputName = editTextUname.getText().toString();
         String userInputPwd = editTextPwd.getText().toString();
-        SharedPreferences sharedPreferences = getSharedPreferences("newsDatas", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("newsDatas", MODE_MULTI_PROCESS);
         String trueUname = sharedPreferences.getString("username", null);
         String truePwd = sharedPreferences.getString("user_password", null);
         GlobalApplication app = (GlobalApplication) this.getApplication();
@@ -76,6 +76,12 @@ public class LoginActivity extends AppCompatActivity {
         UserBean userBean = dbManager.findUser(userInputName, userInputPwd);
         if (userInputName.equals(trueUname) && userInputPwd.equals(truePwd) || userBean !=  null) {
 			//sharedPreferences.Editor editor = sharedPreferences.edit();
+            if (trueUname == null || !trueUname.equals(userInputName)) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("username", userInputName);
+                editor.putString("user_password", userInputPwd);
+                editor.apply();
+            }
             this.finish();  //关闭原来界面
             Toast.makeText(this, "登录成功", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, MainActivity.class);

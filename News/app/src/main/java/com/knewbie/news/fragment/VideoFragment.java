@@ -131,7 +131,7 @@ public class VideoFragment extends Fragment {
         });
     }
 
-    private void refresh() {
+    public void refresh() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));    //设置为垂直布局
         //NewsForReadItemAdapter newsForReadItemAdapter = new NewsForReadItemAdapter(newsForReadItemList, getActivity());
         adapter = new VideoRecyclerViewAdapter(this.getActivity(), videoBeanList);
@@ -207,22 +207,34 @@ public class VideoFragment extends Fragment {
                         GlobalApplication globalApplication = (GlobalApplication) getActivity().getApplication();
                         DatabaseOperationDao dbManager = globalApplication.getDatabaseOperationDao();
                         VideoBean videoBean;
-
+                        dbManager.getVideoAllList();
                         videoBean = new Gson().fromJson(s, VideoBean.class);
+                        videoBeanList = videoBean.getBodyList();
                         //Log.d("hello", "getNewsDataFromInternet------onPostExecute,newsBean="+newsBean);
                         //Log.d("hello", "getNewsDataFromInternet------onPostExecute,ErrorCode"+videoBean.getError_code());
-                       if (videoBeanList != null) {
-                            // TODO: videoBeanList = newsBean.getResult().getData();
+                        if (videoBeanList != null && videoBeanList.size()>0) {
+                            /*Log.d("hello", "VideoListSize-----id "+videoBeanList.get(0).getInfoId()+", title"+videoBeanList.get(0).getMemberItem().getName()+", url"+videoBeanList.get(0).getMemberItem().getVideoFiles());
+                            Log.d("hello", "VideoListBean-----bodyList"+videoBean.getBodyList());
+                            Log.d("hello", "VideoListBean-----bodyList.get0.title"+videoBean.getBodyList().get(0).getTitle());
+                            Log.d("hello", "VideoListBean-----bodyList.get0.MemberItem().getVideoFiles"+videoBean.getBodyList().get(0).getMemberItem().getVideoFiles());
+                            Log.d("hello", "VideoListBean-----bodyList.get0.MemberItem().getVideoFiles.size"+videoBean.getBodyList().get(0).getMemberItem().getVideoFiles().size());
+                            Log.d("hello", "VideoListBean-----bodyList.get0.MemberItem().getVideoFiles.get(0)"+videoBean.getBodyList().get(0).getMemberItem().getVideoFiles().get(0));
+                            */
                             for (int i=0; i<videoBeanList.size(); i++) {
                                 VideoBean.BodyListBean video = videoBeanList.get(i);
-                                if (!dbManager.findVideo(""+video.getInfoId())) {
+                                if (video.getInfoId()!= null && video.getMemberItem().getVideoFiles()!=null && video.getMemberItem().getVideoFiles().size()!=0 && !dbManager.findVideo(""+video.getInfoId())) {   //不知为何，会有VideoFile为null的情况？加上条件，则不报错
+                                    //此条不能insert ，video----id:survey8----null----0----null----null，且video.getMemberItem().getVideoFiles()是[]（size=0）
+                                    //Log.d("hello", "addVideo-----"+video.getInfoId()+","+(video.getMemberItem().getVideoFiles()));
                                     dbManager.addVideoBean(video);
-                                    Log.d("hello", "addVideo");
+                                    //Log.d("hello", "addVideo-----"+video.getInfoId());
                                 }
                                 //Log.d("hello", ""+dataBean.getUniquekey());
                             }
                             videoBean.setBodyList(videoBeanList);
                             //NewsBean.ResultBean.DataBean dataBean = newsBean.getResult().getData().get(i);
+                        } else {
+                            videoBeanList = dbManager.getVideoBeanList();
+                            videoBean.setBodyList(videoBeanList);
                         }
                         /**/
                         Message message = newsMessageHandler.obtainMessage();

@@ -1,5 +1,6 @@
 package com.knewbie.news.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class VideoBean {
@@ -14,6 +15,11 @@ public class VideoBean {
     *
     * */
 
+    public VideoBean() {
+        bodyList = new ArrayList<>();
+        header = new ArrayList<>();
+    }
+
     /**
      * relate :
      * title :
@@ -27,7 +33,7 @@ public class VideoBean {
     private String title;
     private String relateDes;
     private String systemTime;
-    private List<?> header;
+    private List<Header> header;
     private List<BodyListBean> bodyList;
 
     public String getRelate() {
@@ -62,11 +68,11 @@ public class VideoBean {
         this.systemTime = systemTime;
     }
 
-    public List<?> getHeader() {
+    public List<Header> getHeader() {
         return header;
     }
 
-    public void setHeader(List<?> header) {
+    public void setHeader(List<Header> header) {
         this.header = header;
     }
 
@@ -76,6 +82,117 @@ public class VideoBean {
 
     public void setBodyList(List<BodyListBean> bodyList) {
         this.bodyList = bodyList;
+    }
+
+    /**
+     * Auto-generated: 2020-03-30 8:52:37
+     *
+     * @author bejson.com (i@bejson.com)
+     * @website http://www.bejson.com/java2pojo/
+     */
+    public class Header {
+
+        private String title;
+        private List<BodyListBean.ImageListBean> imageList;
+        private String abstractDesc;
+        private String showType;
+        private String createDate;
+        private String updateDate;
+        private String memberType;
+        private String itemId;
+        private String infoId;
+        private String tag;
+        private BodyListBean.WeMediaBean weMedia;
+        private BodyListBean.MemberItemBean memberItem;
+
+        public Header() {
+
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+        public String getTitle() {
+            return title;
+        }
+
+        public void setImageList(List<BodyListBean.ImageListBean> imageList) {
+            this.imageList = imageList;
+        }
+        public List<BodyListBean.ImageListBean> getImageList() {
+            return imageList;
+        }
+
+        public void setAbstractDesc(String abstractDesc) {
+            this.abstractDesc = abstractDesc;
+        }
+        public String getAbstractDesc() {
+            return abstractDesc;
+        }
+
+        public void setShowType(String showType) {
+            this.showType = showType;
+        }
+        public String getShowType() {
+            return showType;
+        }
+
+        public void setCreateDate(String createDate) {
+            this.createDate = createDate;
+        }
+        public String getCreateDate() {
+            return createDate;
+        }
+
+        public void setUpdateDate(String updateDate) {
+            this.updateDate = updateDate;
+        }
+        public String getUpdateDate() {
+            return updateDate;
+        }
+
+        public void setMemberType(String memberType) {
+            this.memberType = memberType;
+        }
+        public String getMemberType() {
+            return memberType;
+        }
+
+        public void setItemId(String itemId) {
+            this.itemId = itemId;
+        }
+        public String getItemId() {
+            return itemId;
+        }
+
+        public void setInfoId(String infoId) {
+            this.infoId = infoId;
+        }
+        public String getInfoId() {
+            return infoId;
+        }
+
+        public void setTag(String tag) {
+            this.tag = tag;
+        }
+        public String getTag() {
+            return tag;
+        }
+
+        public void setWeMedia(BodyListBean.WeMediaBean weMedia) {
+            this.weMedia = weMedia;
+        }
+        public BodyListBean.WeMediaBean getWeMedia() {
+            return weMedia;
+        }
+
+        public void setMemberItem(BodyListBean.MemberItemBean memberItem) {
+            this.memberItem = memberItem;
+        }
+        public BodyListBean.MemberItemBean getMemberItem() {
+            return memberItem;
+        }
+
     }
 
     public static class BodyListBean {
@@ -106,6 +223,12 @@ public class VideoBean {
         private WeMediaBean weMedia;
         private MemberItemBean memberItem;
         private List<ImageListBean> imageList;
+
+        public BodyListBean() {
+            weMedia = new WeMediaBean();
+            memberItem = new MemberItemBean();
+            //imageList = new ArrayList<>();
+        }
 
         public String getTitle() {
             return title;
@@ -312,6 +435,10 @@ public class VideoBean {
             private String keyWords;
             private String feedbackFeatures;
             private List<VideoFilesBean> videoFiles;
+
+            public MemberItemBean() {
+                videoFiles = new ArrayList<>();
+            }
 
             public String getUcmsId() {
                 return ucmsId;

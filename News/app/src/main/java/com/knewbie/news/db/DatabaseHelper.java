@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.knewbie.news.R;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "account.db";
@@ -52,6 +51,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
         sql = "create table history_table (history_id integer primary key autoincrement, user_id integer, news_id text)";
         db.execSQL(sql);
+
+        /*
+        *点赞
+        * */
+        sql = "create table thumb_up_table (thumb_up_id integer primary key autoincrement, user_id integer, news_id text)";
+        db.execSQL(sql);
         /* 打赏记录*
         sql = "create table tip_table (tip_id integer primary key autoincrement, user_id, news_id)";
         db.execSQL(sql);
@@ -83,9 +88,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // news_table (news_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url, cover_pic2_url, cover_pic3_url)
         //      以前设计： news_table (news_id, title, type, digest, read_amount, review_amount, like_amount, content, last_edit_time, release_user_id, cover_pic_id)
-        String nowTime = simpleDateFormat.format(new Date());
-        sql = "insert into news_table(news_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url, cover_pic2_url, cover_pic3_url) values('1', '标题', '热搜', '一段摘要，一段摘要。', 45, 8, 10, '一段内容，一段内容，一段内容', '" + nowTime + "', '来源1', 'R.drawable.logo_news_fill_2', 'R.drawable.logo_news_fill_2', null)";
-        db.execSQL(sql);
+        //String nowTime = simpleDateFormat.format(new Date());
+        //sql = "insert into news_table(news_id, title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url, cover_pic2_url, cover_pic3_url) values('1', '标题', '热搜', '一段摘要，一段摘要。', 45, 8, 10, '一段内容，一段内容，一段内容', '" + nowTime + "', '来源1', 'R.drawable.logo_news_fill_2', 'R.drawable.logo_news_fill_2', null)";
+        //db.execSQL(sql);
         /*sql = "insert into news_table(title, type, digest, read_amount, review_amount, like_amount, content_url, last_edit_time, release_source, cover_pic1_url, cover_pic2_url, cover_pic3_url) values('标题', '热搜', '一段摘要，一段摘要。', 45, 8, 10, '一段内容，一段内容，一段内容', '" + nowTime + "', '来源1', null, null, null)";
         db.execSQL(sql);
         nowTime = simpleDateFormat.format(new Date());

@@ -34,7 +34,9 @@ public class NewsDetailActivity extends AppCompatActivity {
     private String newsId;
     private boolean hasRun=false;
     private int favoriteId=-1;     //记录是否是收藏了
+    private int thumbUpId = -1;
     private MenuItem menuItemFavorite;
+    private MenuItem menuItemLike;
     private String selectorAd[] = {"body > div.top-wrap.gg-item.J-gg-item", "#J_in_list", "body > div.articledown-wrap.gg-item.J-gg-item",
             "body > div.articledown2-wrap.gg-item.J-gg-item", "#news_check", "#J_interest_news", "#J_hot_news", "#J_interest_news > div.three-wrap.gg-item.J-gg-item", "#J_in_list > div:nth-child(1)"};
 
@@ -50,6 +52,8 @@ public class NewsDetailActivity extends AppCompatActivity {
         toolbarBottom = findViewById(R.id.toolbarBottom_NewsDetail);
         webViewNewDetail = findViewById(R.id.webView_newsDetail);
         toolbarBottom.inflateMenu(R.menu.toolbar_news_detail_bottom);
+        if (menuItemLike==null)
+            menuItemLike = toolbarBottom.getMenu().findItem(R.id.toolbarItem_like);
         if (menuItemFavorite==null)
             menuItemFavorite = toolbarBottom.getMenu().findItem(R.id.toolbarItem_collect);
         //url = getIntent().getStringExtra("url");
@@ -69,6 +73,12 @@ public class NewsDetailActivity extends AppCompatActivity {
         if (favoriteId != -1) {
             menuItemFavorite.setTitle("取消收藏");
         }
+
+        thumbUpId = dbManager.findNewsThumbUp(uid, newsId);
+        if (thumbUpId != -1) {
+            menuItemLike.setIcon(R.drawable.ic_home_like_fill);
+        }
+
         int historyId = dbManager.findNewsHistory(uid, newsId);
         //int len = dbManager.getNewsHistoryList(uid).size();
         if (historyId == -1) {
@@ -86,6 +96,9 @@ public class NewsDetailActivity extends AppCompatActivity {
             //dbManager.addNewsDataBean(dataBean);
             //Toast.makeText(this, historyId+"删除后，加入浏览历史", Toast.LENGTH_SHORT).show();
         }
+        int readCount = dbManager.getNewsDataBean(newsId).getReadAmount()+1;
+        dbManager.updateTable("news_table", "read_amount = "+readCount, "news_id = '"+newsId+"'");
+        setResult(1);
 
         WebSettings webSettings = webViewNewDetail.getSettings();
         final String selector = "body > div.top-wrap.gg-item.J-gg-item";
@@ -121,7 +134,7 @@ public class NewsDetailActivity extends AppCompatActivity {
                             "function setTop3() {document.querySelector('body > div.articledown2-wrap.gg-item.J-gg-item').style.display=\"none\";}setTop3();" +
                             "function setTop4() {document.querySelector('#news_check').style.display=\"none\";}setTop4();";
                     webViewNewDetail.loadUrl(js);
-                    Log.d("hello", "clearAd");
+                    //Log.d("hello", "clearAd");
                 }
             };
 
@@ -153,8 +166,38 @@ public class NewsDetailActivity extends AppCompatActivity {
         toolbarBottom.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                GlobalApplication application = (GlobalApplication) getApplication();
+                DatabaseOperationDao dbManager = application.getDatabaseOperationDao();
+                int likeCount;
+                likeCount = dbManager.getNewsDataBean(newsId).getLikeAmount();
                 switch (item.getItemId()) {
                     case R.id.toolbarItem_like:
+                        if (uid == 0 || newsId == null || newsId.equals("")) {
+                            Toast.makeText(NewsDetailActivity.this, "点赞失败", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        thumbUpId = dbManager.findNewsThumbUp(uid, newsId);
+                        if (thumbUpId == -1) {
+                            dbManager.addNewsThumbUpDisplayItem(uid, newsId);
+                            likeCount += 1;
+                            dbManager.updateTable("news_table", "like_amount =  "+likeCount, "news_id = '"+newsId+"'");
+                            //Toast.makeText(NewsDetailActivity.this, "收藏成功！", Toast.LENGTH_SHORT).show();
+                            if (menuItemLike==null)
+                                menuItemLike = toolbarBottom.getMenu().findItem(R.id.toolbarItem_like);
+                            menuItemLike.setIcon(R.drawable.ic_home_like_fill);
+                            setResult(1);
+                            dbManager.getNewsThumbUpItemList();
+                        } else {
+                            //Toast.makeText(NewsDetailActivity.this, "您已收藏过，已取消收藏", Toast.LENGTH_SHORT).show();
+                            dbManager.deleteNewsThumbUpDisplayItem(thumbUpId);
+                            likeCount -= 1;
+                            dbManager.updateTable("news_table", "like_amount =  "+likeCount, "news_id = '"+newsId+"'");
+                            if (menuItemLike==null)
+                                menuItemLike = toolbarBottom.getMenu().findItem(R.id.toolbarItem_like);
+                            menuItemLike.setIcon(R.drawable.ic_home_like_down);
+                            setResult(1);
+                            dbManager.getNewsThumbUpItemList();
+                        }
                         break;
                     case R.id.toolbarItem_review:
                         break;
@@ -163,8 +206,6 @@ public class NewsDetailActivity extends AppCompatActivity {
                             Toast.makeText(NewsDetailActivity.this, "收藏失败", Toast.LENGTH_SHORT).show();
                             break;
                         }
-                        GlobalApplication application = (GlobalApplication) getApplication();
-                        DatabaseOperationDao dbManager = application.getDatabaseOperationDao();
                         favoriteId = dbManager.findNewsFavorite(uid, newsId);
                         if (favoriteId == -1) {
                             dbManager.addNewsFavoriteDisplayItem(uid, newsId);

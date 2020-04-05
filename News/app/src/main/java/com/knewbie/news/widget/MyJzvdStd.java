@@ -1,7 +1,6 @@
 package com.knewbie.news.widget;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -48,12 +47,6 @@ public class MyJzvdStd extends JzvdStd {
     public void onClick(View v) {
         super.onClick(v);
         if (v.getId() == R.id.share) {
-            // TODO: 分享
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            //intent.putExtra(Intent.EXTRA_SUBJECT, url);
-            intent.setType("text/plain");
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            //startActivity(Intent.createChooser(intent, getTitle()));
         }
     }
 }

@@ -173,12 +173,12 @@ public class VideoFragment extends Fragment {
                     connection.setReadTimeout(5000);
                     connection.setConnectTimeout(5000);
                     int responseCode = connection.getResponseCode();
-                    Log.d("hello", "getNewsDataFromInternet------connection.responseCode"+responseCode);
+                    //Log.d("hello", "getNewsDataFromInternet------connection.responseCode"+responseCode);
                     if (responseCode == 200) {
                         InputStream inputStream = connection.getInputStream();
-                        Log.d("hello", "getNewsDataFromInternet------connection.content"+connection.getContent());
+                        //Log.d("hello", "getNewsDataFromInternet------connection.content"+connection.getContent());
                         String json = streamToString(inputStream, "utf-8");
-                        Log.d("hello","getNewsDataFromInternet------HomeFragment："+json);
+                        //Log.d("hello","getNewsDataFromInternet------HomeFragment："+json);
                         return json;
                     } else {
                         Log.d("hello", "getNewsDataFromInternet------else,非200 "+responseCode);
@@ -207,7 +207,7 @@ public class VideoFragment extends Fragment {
                         GlobalApplication globalApplication = (GlobalApplication) getActivity().getApplication();
                         DatabaseOperationDao dbManager = globalApplication.getDatabaseOperationDao();
                         VideoBean videoBean;
-                        dbManager.getVideoAllList();
+                        //dbManager.getVideoAllList();
                         videoBean = new Gson().fromJson(s, VideoBean.class);
                         videoBeanList = videoBean.getBodyList();
                         //Log.d("hello", "getNewsDataFromInternet------onPostExecute,newsBean="+newsBean);

@@ -86,6 +86,9 @@ public class NewsBean {
             private String thumbnail_pic_s;
             private String thumbnail_pic_s02;
             private String thumbnail_pic_s03;
+            private int readAmount;
+            private int reviewAmount;
+            private int likeAmount;
 
             public String getUniquekey() {
                 return uniquekey;
@@ -157,6 +160,30 @@ public class NewsBean {
 
             public void setThumbnail_pic_s03(String thumbnail_pic_s03) {
                 this.thumbnail_pic_s03 = thumbnail_pic_s03;
+            }
+
+            public int getReadAmount() {
+                return readAmount;
+            }
+
+            public void setReadAmount(int readAmount) {
+                this.readAmount = readAmount;
+            }
+
+            public int getReviewAmount() {
+                return reviewAmount;
+            }
+
+            public void setReviewAmount(int reviewAmount) {
+                this.reviewAmount = reviewAmount;
+            }
+
+            public int getLikeAmount() {
+                return likeAmount;
+            }
+
+            public void setLikeAmount(int likeAmount) {
+                this.likeAmount = likeAmount;
             }
         }
     }

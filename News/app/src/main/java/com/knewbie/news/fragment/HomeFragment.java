@@ -59,6 +59,7 @@ public class HomeFragment extends Fragment {
     private final int GET_NEWS_FROM_DB = 1;
     private int page = 0;
     private int len = 10;
+    private final int REQUESTCODE_ADDNEWS = 1;
     private Handler newsMessageHandler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -181,6 +182,8 @@ public class HomeFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));    //设置为垂直布局
         //NewsForReadItemAdapter newsForReadItemAdapter = new NewsForReadItemAdapter(newsForReadItemList, getActivity());
         adapter = new NewsForReadRecyclerViewAdapter(this.getActivity(), newsBeanList);
+        adapter.notifyDataSetChanged();
+        //Log.d("hello", "mainactivity---homeFragmen----refresh");
         mRecyclerView.setAdapter(adapter);
         /*mRecyclerView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,7 +221,7 @@ public class HomeFragment extends Fragment {
                 //final UserBean userBean = getActivity().;
                 //intent.putExtra("uid", ((MainActivity)getActivity()).getUser().getId());
                 //Log.d("hello, url = ", url+" 。");
-                startActivity(intent);
+                startActivityForResult(intent, REQUESTCODE_ADDNEWS);
             }
         });
         adapter.setOnItemLongClickListener(new NewsForReadRecyclerViewAdapter.OnItemLongClickListener() {
@@ -271,7 +274,7 @@ public class HomeFragment extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d("hello", "getNewsDataFromInternet------onPostExecute,s="+s+"。");
+                        //Log.d("hello", "getNewsDataFromInternet------onPostExecute,s="+s+"。");
                         GlobalApplication globalApplication = (GlobalApplication) getActivity().getApplication();
                         DatabaseOperationDao dbManager = globalApplication.getDatabaseOperationDao();
                         NewsBean newsBean;
@@ -304,6 +307,9 @@ public class HomeFragment extends Fragment {
                                     }
                                     //Log.d("hello", ""+dataBean.getUniquekey());
                                 }
+                                newsBeanList = dbManager.getNewsDataBeanList();
+                                newsBean.setResult(new NewsBean.ResultBean());
+                                newsBean.getResult().setData(newsBeanList);
                                 //NewsBean.ResultBean.DataBean dataBean = newsBean.getResult().getData().get(i);
                             }
                         }
@@ -391,8 +397,16 @@ public class HomeFragment extends Fragment {
         }
         return result;
     }
-	
-/*@Override
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        GlobalApplication application = (GlobalApplication) getActivity().getApplication();
+        DatabaseOperationDao dbManager = application.getDatabaseOperationDao();
+        newsBeanList = dbManager.getNewsDataBeanList();
+        refresh();
+    }
+	/*@Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         Toast.makeText(this.getActivity(), "Fragment", Toast.LENGTH_SHORT).show();
         //Log.d("helloworld", "fragmentOnActivityResult");
